@@ -263,6 +263,103 @@ export default function App() {
                     />
                     Βασικές εργασίες
                 </label>
+                {section === "kitchen" && (
+                    <>
+                        <label>
+                            <input
+                                type="checkbox"
+                                checked={hasCabinets}
+                                onChange={(e) => setHasCabinets(e.target.checked)}
+                            />
+                            Νέα ντουλάπια
+                        </label>
+
+                        <label>
+                            <input
+                                type="checkbox"
+                                checked={hasCountertop}
+                                onChange={(e) => setHasCountertop(e.target.checked)}
+                            />
+                            Νέος πάγκος
+                        </label>
+
+                        <label>
+                            <input
+                                type="checkbox"
+                                checked={hasPainting}
+                                onChange={(e) => setHasPainting(e.target.checked)}
+                            />
+                            Βάψιμο
+                        </label>
+
+                        <label>
+                            <input
+                                type="checkbox"
+                                checked={hasFloor}
+                                onChange={(e) => setHasFloor(e.target.checked)}
+                            />
+                            Νέο δάπεδο
+                        </label>
+
+                        <label>
+                            <input
+                                type="checkbox"
+                                checked={hasInstallations}
+                                onChange={(e) => setHasInstallations(e.target.checked)}
+                            />
+                            Υδραυλικά & ηλεκτρολογικά
+                        </label>
+                    </>
+                )}
+
+                {section === "bathroom" && (
+                    <>
+                        <label>
+                            <input
+                                type="checkbox"
+                                checked={hasSanitary}
+                                onChange={(e) => setHasSanitary(e.target.checked)}
+                            />
+                            Νέα είδη υγιεινής
+                        </label>
+
+                        <label>
+                            <input
+                                type="checkbox"
+                                checked={hasTiles}
+                                onChange={(e) => setHasTiles(e.target.checked)}
+                            />
+                            Νέα πλακάκια
+                        </label>
+
+                        <label>
+                            <input
+                                type="checkbox"
+                                checked={hasBathroomPainting}
+                                onChange={(e) => setHasBathroomPainting(e.target.checked)}
+                            />
+                            Βάψιμο
+                        </label>
+
+                        <label>
+                            <input
+                                type="checkbox"
+                                checked={hasBathroomFloor}
+                                onChange={(e) => setHasBathroomFloor(e.target.checked)}
+                            />
+                            Νέο δάπεδο
+                        </label>
+
+                        <label>
+                            <input
+                                type="checkbox"
+                                checked={hasBathroomInstallations}
+                                onChange={(e) => setHasBathroomInstallations(e.target.checked)}
+                            />
+                            Υδραυλικά & ηλεκτρολογικά
+                        </label>
+                    </>
+                )}
 
                 <button onClick={calculateEstimate}>Υπολογισμός</button>
             </div>
