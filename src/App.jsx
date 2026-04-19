@@ -22,7 +22,7 @@ export default function App() {
             return;
         }
 
-        const base = costData.renovationBase[renovationType];
+
 
 
 
