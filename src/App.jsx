@@ -1,5 +1,6 @@
 import { useState } from "react";
 import "./App.css";
+import { costData } from "./costData";
 
 export default function App() {
     const [sqm, setSqm] = useState("");
@@ -21,34 +22,14 @@ export default function App() {
             return;
         }
 
-        const renovationBase = {
-            light: { low: 120, high: 220 },
-            partial: { low: 250, high: 450 },
-            full: { low: 450, high: 800 },
-        };
+        const base = costData.renovationBase[renovationType];
 
-        const qualityFactor = {
-            basic: 0.9,
-            standard: 1,
-            premium: 1.25,
-        };
 
-        const regionFactor = {
-            athens: 1.1,
-            thessaloniki: 1.05,
-            other: 0.95,
-        };
 
-        const propertyFactor = {
-            apartment: 1,
-            office: 1.1,
-            shop: 1.15,
-        };
-
-        const base = renovationBase[renovationType];
-        const qf = qualityFactor[quality];
-        const rf = regionFactor[region];
-        const pf = propertyFactor[propertyType];
+        const base = costData.renovationBase[renovationType];
+        const qf = costData.qualityFactor[quality];
+        const rf = costData.regionFactor[region];
+        const pf = costData.propertyFactor[propertyType];
 
         let low = area * base.low * qf * rf * pf;
         let high = area * base.high * qf * rf * pf;
