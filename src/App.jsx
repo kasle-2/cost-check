@@ -7,7 +7,6 @@ export default function App() {
     const [sqm, setSqm] = useState("");
     const [quality, setQuality] = useState("standard");
 
-    // Κοινές βασικές εργασίες
     const [hasBaseWorks, setHasBaseWorks] = useState(true);
 
     // Kitchen
@@ -62,10 +61,8 @@ export default function App() {
 
         if (section === "kitchen") {
             if (hasCabinets) {
-                const cabinetsLow =
-                    (quality === "premium" ? 7000 : quality === "basic" ? 3000 : 5000) * qf;
-                const cabinetsHigh =
-                    (quality === "premium" ? 14000 : quality === "basic" ? 6000 : 9000) * qf;
+                const cabinetsLow = (quality === "premium" ? 7000 : 5000) * qf;
+                const cabinetsHigh = (quality === "premium" ? 14000 : 9000) * qf;
 
                 low += cabinetsLow;
                 high += cabinetsHigh;
@@ -78,10 +75,8 @@ export default function App() {
             }
 
             if (hasCountertop) {
-                const countertopLow =
-                    (quality === "premium" ? 5000 : quality === "basic" ? 2500 : 3500) * qf;
-                const countertopHigh =
-                    (quality === "premium" ? 10000 : quality === "basic" ? 5000 : 7000) * qf;
+                const countertopLow = (quality === "premium" ? 5000 : 3500) * qf;
+                const countertopHigh = (quality === "premium" ? 10000 : 7000) * qf;
 
                 low += countertopLow;
                 high += countertopHigh;
@@ -122,10 +117,8 @@ export default function App() {
             }
 
             if (hasInstallations) {
-                const instLow =
-                    (quality === "premium" ? 1500 : quality === "basic" ? 800 : 1200) * qf;
-                const instHigh =
-                    (quality === "premium" ? 3500 : quality === "basic" ? 2000 : 2500) * qf;
+                const instLow = (quality === "premium" ? 1500 : 1200) * qf;
+                const instHigh = (quality === "premium" ? 3500 : 2500) * qf;
 
                 low += instLow;
                 high += instHigh;
@@ -140,10 +133,8 @@ export default function App() {
 
         if (section === "bathroom") {
             if (hasSanitary) {
-                const sanitaryLow =
-                    (quality === "premium" ? 3500 : quality === "basic" ? 1200 : 2200) * qf;
-                const sanitaryHigh =
-                    (quality === "premium" ? 7000 : quality === "basic" ? 2500 : 4500) * qf;
+                const sanitaryLow = (quality === "premium" ? 3500 : 2200) * qf;
+                const sanitaryHigh = (quality === "premium" ? 7000 : 4500) * qf;
 
                 low += sanitaryLow;
                 high += sanitaryHigh;
@@ -156,10 +147,8 @@ export default function App() {
             }
 
             if (hasTiles) {
-                const tilesLow =
-                    area * (quality === "premium" ? 90 : quality === "basic" ? 35 : 55) * qf;
-                const tilesHigh =
-                    area * (quality === "premium" ? 160 : quality === "basic" ? 70 : 110) * qf;
+                const tilesLow = area * (quality === "premium" ? 90 : 55) * qf;
+                const tilesHigh = area * (quality === "premium" ? 160 : 110) * qf;
 
                 low += tilesLow;
                 high += tilesHigh;
@@ -200,10 +189,8 @@ export default function App() {
             }
 
             if (hasBathroomInstallations) {
-                const bathInstLow =
-                    (quality === "premium" ? 1800 : quality === "basic" ? 700 : 1200) * qf;
-                const bathInstHigh =
-                    (quality === "premium" ? 4000 : quality === "basic" ? 1800 : 2800) * qf;
+                const bathInstLow = (quality === "premium" ? 1800 : 1200) * qf;
+                const bathInstHigh = (quality === "premium" ? 4000 : 2800) * qf;
 
                 low += bathInstLow;
                 high += bathInstHigh;
@@ -219,19 +206,14 @@ export default function App() {
         const avg = (low + high) / 2;
 
         let comparisonMessage = "";
-        let percentage = 0;
 
         if (quote > 0 && avg > 0) {
-            percentage = Math.round(((quote - avg) / avg) * 100);
+            const percentage = Math.round(((quote - avg) / avg) * 100);
 
             if (quote < low) {
-                comparisonMessage = `Η προσφορά είναι ${Math.abs(
-                    percentage
-                )}% κάτω από τον μέσο όρο`;
+                comparisonMessage = `Η προσφορά είναι ${Math.abs(percentage)}% κάτω από τον μέσο όρο`;
             } else if (quote > high) {
-                comparisonMessage = `Η προσφορά είναι ${Math.abs(
-                    percentage
-                )}% πάνω από τον μέσο όρο`;
+                comparisonMessage = `Η προσφορά είναι ${Math.abs(percentage)}% πάνω από τον μέσο όρο`;
             } else {
                 comparisonMessage = `Η προσφορά είναι κοντά στον μέσο όρο (${percentage}%)`;
             }
@@ -253,12 +235,6 @@ export default function App() {
         <div className="container">
             <h1>Cost Check</h1>
 
-            <p>
-                {section === "kitchen"
-                    ? "Υπολογισμός κόστους ανακαίνισης κουζίνας"
-                    : "Υπολογισμός κόστους ανακαίνισης μπάνιου"}
-            </p>
-
             <div className="card">
                 <label>Ενότητα</label>
                 <select value={section} onChange={(e) => setSection(e.target.value)}>
@@ -266,11 +242,7 @@ export default function App() {
                     <option value="bathroom">Μπάνιο</option>
                 </select>
 
-                <label>
-                    {section === "kitchen"
-                        ? "Τετραγωνικά κουζίνας (m²)"
-                        : "Τετραγωνικά μπάνιου (m²)"}
-                </label>
+                <label>Τετραγωνικά (m²)</label>
                 <input
                     type="number"
                     value={sqm}
@@ -279,7 +251,6 @@ export default function App() {
 
                 <label>Ποιότητα</label>
                 <select value={quality} onChange={(e) => setQuality(e.target.value)}>
-                    <option value="basic">Basic</option>
                     <option value="standard">Standard</option>
                     <option value="premium">Premium</option>
                 </select>
@@ -293,163 +264,26 @@ export default function App() {
                     Βασικές εργασίες
                 </label>
 
-                {section === "kitchen" && (
-                    <>
-                        <label>
-                            <input
-                                type="checkbox"
-                                checked={hasCabinets}
-                                onChange={(e) => setHasCabinets(e.target.checked)}
-                            />
-                            Νέα ντουλάπια
-                        </label>
-
-                        <label>
-                            <input
-                                type="checkbox"
-                                checked={hasCountertop}
-                                onChange={(e) => setHasCountertop(e.target.checked)}
-                            />
-                            Νέος πάγκος
-                        </label>
-
-                        <label>
-                            <input
-                                type="checkbox"
-                                checked={hasPainting}
-                                onChange={(e) => setHasPainting(e.target.checked)}
-                            />
-                            Βάψιμο
-                        </label>
-
-                        <label>
-                            <input
-                                type="checkbox"
-                                checked={hasFloor}
-                                onChange={(e) => setHasFloor(e.target.checked)}
-                            />
-                            Νέο δάπεδο
-                        </label>
-
-                        <label>
-                            <input
-                                type="checkbox"
-                                checked={hasInstallations}
-                                onChange={(e) => setHasInstallations(e.target.checked)}
-                            />
-                            Υδραυλικά & ηλεκτρολογικά
-                        </label>
-                    </>
-                )}
-
-                {section === "bathroom" && (
-                    <>
-                        <label>
-                            <input
-                                type="checkbox"
-                                checked={hasSanitary}
-                                onChange={(e) => setHasSanitary(e.target.checked)}
-                            />
-                            Νέα είδη υγιεινής
-                        </label>
-
-                        <label>
-                            <input
-                                type="checkbox"
-                                checked={hasTiles}
-                                onChange={(e) => setHasTiles(e.target.checked)}
-                            />
-                            Νέα πλακάκια
-                        </label>
-
-                        <label>
-                            <input
-                                type="checkbox"
-                                checked={hasBathroomPainting}
-                                onChange={(e) => setHasBathroomPainting(e.target.checked)}
-                            />
-                            Βάψιμο
-                        </label>
-
-                        <label>
-                            <input
-                                type="checkbox"
-                                checked={hasBathroomFloor}
-                                onChange={(e) => setHasBathroomFloor(e.target.checked)}
-                            />
-                            Νέο δάπεδο
-                        </label>
-
-                        <label>
-                            <input
-                                type="checkbox"
-                                checked={hasBathroomInstallations}
-                                onChange={(e) => setHasBathroomInstallations(e.target.checked)}
-                            />
-                            Υδραυλικά & ηλεκτρολογικά
-                        </label>
-                    </>
-                )}
-
-                <label>Προσφορά (προαιρετικά)</label>
-                <input
-                    type="number"
-                    value={userQuote}
-                    onChange={(e) => setUserQuote(e.target.value)}
-                />
-
                 <button onClick={calculateEstimate}>Υπολογισμός</button>
             </div>
 
             {result && (
                 <div className="result-card">
-                    <h2>
-                        💰 Εκτιμώμενο κόστος{" "}
-                        {section === "kitchen" ? "κουζίνας" : "μπάνιου"}
-                    </h2>
+                    <h2>💰 Εκτιμώμενο κόστος</h2>
 
                     <p className="price">
                         {result.low.toLocaleString("el-GR")} € —{" "}
                         {result.high.toLocaleString("el-GR")} €
                     </p>
 
-                    <p>Μέσο κόστος: {result.avg.toLocaleString("el-GR")} €</p>
-
-                    <p>
-                        €/m²: {result.avgPerSqmLow} - {result.avgPerSqmHigh}
-                    </p>
-
-                    <p className="note">
-                        Η εκτίμηση βασίζεται σε ενδεικτικές τιμές αγοράς και δεν αποτελεί
-                        δεσμευτική προσφορά.
-                    </p>
-
-                    <h3>Ανάλυση</h3>
                     <ul>
                         {result.breakdown.map((item, i) => (
                             <li key={i}>
-                                {item.label}: {Math.round(item.low)}€ - {Math.round(item.high)}€
+                                {item.label}: {Math.round(item.low)}€ -{" "}
+                                {Math.round(item.high)}€
                             </li>
                         ))}
                     </ul>
-
-                    {result.quote && (
-                        <p
-                            style={{
-                                marginTop: "20px",
-                                fontWeight: "bold",
-                                color:
-                                    result.quote < result.low
-                                        ? "green"
-                                        : result.quote > result.high
-                                            ? "red"
-                                            : "#2563eb",
-                            }}
-                        >
-                            Προσφορά: {result.quote.toLocaleString("el-GR")} € →{" "}
-                            {result.comparisonMessage}
-                        </p>
-                    )}
                 </div>
             )}
         </div>
