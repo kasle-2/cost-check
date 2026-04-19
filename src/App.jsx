@@ -1,145 +1,241 @@
 import { useState } from "react";
+import "./App.css";
 
 export default function App() {
-    const [desc, setDesc] = useState("");
-    const [qty, setQty] = useState("");
-    const [unit, setUnit] = useState("");
-    const [market, setMarket] = useState("");
+    const [sqm, setSqm] = useState("");
+    const [propertyType, setPropertyType] = useState("apartment");
+    const [renovationType, setRenovationType] = useState("partial");
+    const [quality, setQuality] = useState("standard");
+    const [region, setRegion] = useState("athens");
+    const [hasKitchen, setHasKitchen] = useState(true);
+    const [hasBathroom, setHasBathroom] = useState(true);
+    const [userQuote, setUserQuote] = useState("");
+    const [result, setResult] = useState(null);
 
-    const [a, setA] = useState("");
-    const [b, setB] = useState("");
-    const [c, setC] = useState("");
+    function calculateEstimate() {
+        const area = Number(sqm);
+        const quote = Number(userQuote);
 
-    const [result, setResult] = useState("");
-
-    function calculate() {
-        const values = [Number(a), Number(b), Number(c)].filter(v => v > 0);
-
-        if (values.length === 0) {
-            setResult("Βάλε τουλάχιστον μία προσφορά");
+        if (!area || area <= 0) {
+            alert("Βάλε σωστά τετραγωνικά.");
             return;
         }
 
-        const avg = values.reduce((sum, v) => sum + v, 0) / values.length;
+        const renovationBase = {
+            light: { low: 120, high: 220 },
+            partial: { low: 250, high: 450 },
+            full: { low: 450, high: 800 },
+        };
 
-        let text = `Μέση τιμή: ${avg.toFixed(2)}€\n\n`;
+        const qualityFactor = {
+            basic: 0.9,
+            standard: 1,
+            premium: 1.25,
+        };
 
-        values.forEach((v, i) => {
-            const diff = ((v - avg) / avg) * 100;
+        const regionFactor = {
+            athens: 1.1,
+            thessaloniki: 1.05,
+            other: 0.95,
+        };
 
-            if (diff > 15) {
-                text += `Προσφορά ${i + 1}: ΥΨΗΛΗ (+${diff.toFixed(1)}%)\n`;
-            } else if (diff < -15) {
-                text += `Προσφορά ${i + 1}: ΠΟΛΥ ΧΑΜΗΛΗ (${diff.toFixed(1)}%)\n`;
-            } else {
-                text += `Προσφορά ${i + 1}: OK (${diff.toFixed(1)}%)\n`;
-            }
+        const propertyFactor = {
+            apartment: 1,
+            office: 1.1,
+            shop: 1.15,
+        };
+
+        const base = renovationBase[renovationType];
+        const qf = qualityFactor[quality];
+        const rf = regionFactor[region];
+        const pf = propertyFactor[propertyType];
+
+        let low = area * base.low * qf * rf * pf;
+        let high = area * base.high * qf * rf * pf;
+
+        const breakdown = [];
+
+        breakdown.push({
+            label: "Βασικές εργασίες",
+            low,
+            high,
         });
 
-        if (market) {
-            const m = Number(market);
-            const diffMarket = ((avg - m) / m) * 100;
+        if (hasKitchen) {
+            const kitchenLow =
+                quality === "premium" ? 7000 : quality === "basic" ? 3000 : 5000;
+            const kitchenHigh =
+                quality === "premium" ? 14000 : quality === "basic" ? 6000 : 9000;
 
-            text += `\nΤιμή αγοράς: ${m.toFixed(2)}€\n`;
+            low += kitchenLow;
+            high += kitchenHigh;
 
-            if (diffMarket > 15) {
-                text += `👉 ΠΑΝΩ από αγορά (+${diffMarket.toFixed(1)}%)`;
-            } else if (diffMarket < -15) {
-                text += `👉 ΚΑΤΩ από αγορά (${diffMarket.toFixed(1)}%)`;
+            breakdown.push({
+                label: "Κουζίνα",
+                low: kitchenLow,
+                high: kitchenHigh,
+            });
+        }
+
+        if (hasBathroom) {
+            const bathroomLow =
+                quality === "premium" ? 5000 : quality === "basic" ? 2500 : 3500;
+            const bathroomHigh =
+                quality === "premium" ? 10000 : quality === "basic" ? 5000 : 7000;
+
+            low += bathroomLow;
+            high += bathroomHigh;
+
+            breakdown.push({
+                label: "Μπάνιο",
+                low: bathroomLow,
+                high: bathroomHigh,
+            });
+        }
+
+        const avg = (low + high) / 2;
+
+        let comparisonMessage = "";
+        if (quote > 0) {
+            if (quote < low) {
+                comparisonMessage = "Η προσφορά σου είναι κάτω από το εκτιμώμενο εύρος.";
+            } else if (quote > high) {
+                comparisonMessage = "Η προσφορά σου είναι πάνω από το εκτιμώμενο εύρος.";
             } else {
-                text += `👉 ΚΟΝΤΑ στην αγορά`;
+                comparisonMessage = "Η προσφορά σου είναι μέσα στο εκτιμώμενο εύρος.";
             }
         }
 
-        setResult(text);
+        setResult({
+            low: Math.round(low),
+            high: Math.round(high),
+            avg: Math.round(avg),
+            avgPerSqmLow: Math.round(low / area),
+            avgPerSqmHigh: Math.round(high / area),
+            breakdown,
+            quote: quote > 0 ? quote : null,
+            comparisonMessage,
+        });
     }
 
     return (
-        <div style={{
-            minHeight: "100vh",
-            background: "#f4f6f8",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            fontFamily: "Arial"
-        }}>
-            <div style={{
-                background: "white",
-                padding: "30px",
-                borderRadius: "12px",
-                width: "420px",
-                boxShadow: "0 4px 20px rgba(0,0,0,0.1)"
-            }}>
-                <h1 style={{ textAlign: "center" }}>Cost Check</h1>
-                <p style={{ textAlign: "center", color: "#666" }}>
-                    Αξιολόγηση προσφορών έργου
-                </p>
+        <div className="container">
+            <h1>Cost Check</h1>
+            <p className="subtitle">Υπολογισμός ενδεικτικού κόστους ανακαίνισης</p>
 
-                <input placeholder="Περιγραφή εργασίας"
-                       value={desc} onChange={e => setDesc(e.target.value)}
-                       style={inputStyle} />
+            <div className="card">
+                <label>Τετραγωνικά (m²)</label>
+                <input
+                    type="number"
+                    placeholder="π.χ. 85"
+                    value={sqm}
+                    onChange={(e) => setSqm(e.target.value)}
+                />
 
-                <input placeholder="Ποσότητα"
-                       value={qty} onChange={e => setQty(e.target.value)}
-                       style={inputStyle} />
+                <label>Τύπος ακινήτου</label>
+                <select
+                    value={propertyType}
+                    onChange={(e) => setPropertyType(e.target.value)}
+                >
+                    <option value="apartment">Διαμέρισμα</option>
+                    <option value="office">Γραφείο</option>
+                    <option value="shop">Κατάστημα</option>
+                </select>
 
-                <input placeholder="Μονάδα (π.χ. m², kg)"
-                       value={unit} onChange={e => setUnit(e.target.value)}
-                       style={inputStyle} />
+                <label>Είδος ανακαίνισης</label>
+                <select
+                    value={renovationType}
+                    onChange={(e) => setRenovationType(e.target.value)}
+                >
+                    <option value="light">Ελαφριά</option>
+                    <option value="partial">Μερική</option>
+                    <option value="full">Πλήρης</option>
+                </select>
 
-                <input placeholder="Τιμή αγοράς (προαιρετικό)"
-                       value={market} onChange={e => setMarket(e.target.value)}
-                       style={inputStyle} />
+                <label>Επίπεδο ποιότητας</label>
+                <select value={quality} onChange={(e) => setQuality(e.target.value)}>
+                    <option value="basic">Basic</option>
+                    <option value="standard">Standard</option>
+                    <option value="premium">Premium</option>
+                </select>
 
-                <hr />
+                <label>Περιοχή</label>
+                <select value={region} onChange={(e) => setRegion(e.target.value)}>
+                    <option value="athens">Αθήνα</option>
+                    <option value="thessaloniki">Θεσσαλονίκη</option>
+                    <option value="other">Υπόλοιπη Ελλάδα</option>
+                </select>
 
-                <input placeholder="Προσφορά Α (€)"
-                       value={a} onChange={e => setA(e.target.value)}
-                       style={inputStyle} />
+                <div className="checkbox-group">
+                    <label className="checkbox-label">
+                        <input
+                            type="checkbox"
+                            checked={hasKitchen}
+                            onChange={(e) => setHasKitchen(e.target.checked)}
+                        />
+                        Νέα κουζίνα
+                    </label>
 
-                <input placeholder="Προσφορά Β (€)"
-                       value={b} onChange={e => setB(e.target.value)}
-                       style={inputStyle} />
+                    <label className="checkbox-label">
+                        <input
+                            type="checkbox"
+                            checked={hasBathroom}
+                            onChange={(e) => setHasBathroom(e.target.checked)}
+                        />
+                        Ανακαίνιση μπάνιου
+                    </label>
+                </div>
 
-                <input placeholder="Προσφορά Γ (€)"
-                       value={c} onChange={e => setC(e.target.value)}
-                       style={inputStyle} />
+                <label>Προσφορά που πήρες (προαιρετικό)</label>
+                <input
+                    type="number"
+                    placeholder="π.χ. 32000"
+                    value={userQuote}
+                    onChange={(e) => setUserQuote(e.target.value)}
+                />
 
-                <button onClick={calculate} style={buttonStyle}>
-                    Υπολογισμός
-                </button>
-
-                {result && (
-                    <div style={{
-                        marginTop: "20px",
-                        background: "#eef2f7",
-                        padding: "15px",
-                        borderRadius: "8px"
-                    }}>
-                        <pre style={{ margin: 0 }}>{result}</pre>
-                    </div>
-                )}
+                <button onClick={calculateEstimate}>Υπολογισμός</button>
             </div>
+
+            {result && (
+                <div className="result-card">
+                    <h2>Αποτέλεσμα</h2>
+
+                    <p className="price-range">
+                        {result.low.toLocaleString("el-GR")} € —{" "}
+                        {result.high.toLocaleString("el-GR")} €
+                    </p>
+
+                    <p>Μέσο εκτιμώμενο κόστος: {result.avg.toLocaleString("el-GR")} €</p>
+                    <p>
+                        Ενδεικτικό εύρος ανά m²: {result.avgPerSqmLow}€ -{" "}
+                        {result.avgPerSqmHigh}€/m²
+                    </p>
+
+                    <h3>Breakdown</h3>
+                    <ul>
+                        {result.breakdown.map((item, index) => (
+                            <li key={index}>
+                                <strong>{item.label}</strong>:{" "}
+                                {Math.round(item.low).toLocaleString("el-GR")} € -{" "}
+                                {Math.round(item.high).toLocaleString("el-GR")} €
+                            </li>
+                        ))}
+                    </ul>
+
+                    {result.quote && (
+                        <div className="quote-box">
+                            <h3>Σύγκριση με προσφορά</h3>
+                            <p>Η δική σου προσφορά: {result.quote.toLocaleString("el-GR")} €</p>
+                            <p><strong>{result.comparisonMessage}</strong></p>
+                        </div>
+                    )}
+
+                    <p className="note">
+                        Η εκτίμηση είναι ενδεικτική και δεν αποτελεί τελική τεχνική ή οικονομική προσφορά.
+                    </p>
+                </div>
+            )}
         </div>
     );
 }
-
-const inputStyle = {
-    width: "100%",
-    padding: "10px",
-    marginTop: "10px",
-    borderRadius: "6px",
-    border: "1px solid #ccc"
-};
-
-const buttonStyle = {
-    width: "100%",
-    padding: "12px",
-    marginTop: "15px",
-    borderRadius: "6px",
-    border: "none",
-    background: "#2563eb",
-    color: "white",
-    fontWeight: "bold",
-    cursor: "pointer"
-};
