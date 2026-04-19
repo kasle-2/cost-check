@@ -2,48 +2,95 @@ body {
   margin: 0;
   font-family: Arial, sans-serif;
   background: #f3f4f6;
+  color: #24324a;
 }
 
 .container {
-  max-width: 900px;
-  margin: 60px auto;
+  max-width: 760px;
+  margin: 40px auto;
   padding: 20px;
+}
+
+.container h1 {
   text-align: center;
+  margin-bottom: 8px;
+  color: #111827;
 }
 
-h1 {
-  font-size: 36px;
-  margin-bottom: 5px;
+.intro-text {
+  text-align: center;
+  color: #4b5563;
+  margin-bottom: 24px;
+  line-height: 1.5;
 }
 
-.card {
-  background: white;
-  padding: 30px;
-  border-radius: 16px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-  max-width: 500px;
-  margin: 0 auto;
+.card,
+.result-card {
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 24px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  margin-bottom: 24px;
+}
+
+.field-label {
+  display: block;
+  font-weight: 700;
+  margin-bottom: 8px;
+  margin-top: 16px;
+  color: #4b5563;
+}
+
+.card select,
+.card input[type="number"] {
+  width: 100%;
+  padding: 14px 16px;
+  border: 1px solid #d1d5db;
+  border-radius: 12px;
+  font-size: 16px;
+  box-sizing: border-box;
+  background: #fff;
+}
+
+.options-group {
+  margin-top: 18px;
+}
+
+.checkbox-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  width: 100%;
+  padding: 14px 0;
+  border-bottom: 1px solid #eef2f7;
+  font-weight: 700;
+  color: #4b5563;
+  cursor: pointer;
+  box-sizing: border-box;
+}
+
+.checkbox-row:last-child {
+  border-bottom: none;
+}
+
+.checkbox-row span {
+  flex: 1;
   text-align: left;
 }
 
-label {
-  display: block;
-  margin-top: 15px;
-  margin-bottom: 5px;
-  font-weight: 600;
+.checkbox-row input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  margin: 0;
+  cursor: pointer;
 }
 
-input, select {
+.card button {
   width: 100%;
-  padding: 12px;
-  border-radius: 10px;
-  border: 1px solid #ddd;
-}
-
-button {
-  margin-top: 25px;
-  width: 100%;
-  padding: 16px;
+  margin-top: 22px;
+  padding: 14px 18px;
   border: none;
   border-radius: 12px;
   background: #2563eb;
@@ -51,30 +98,55 @@ button {
   font-size: 16px;
   font-weight: 700;
   cursor: pointer;
-  transition: 0.2s;
 }
 
-button:hover {
-  background: #1e40af;
+.card button:hover {
+  background: #1d4ed8;
 }
 
-.result-card {
-  margin-top: 30px;
-  background: #ffffff;
-  padding: 30px;
-  border-radius: 16px;
-  box-shadow: 0 12px 35px rgba(0,0,0,0.1);
-  border: 2px solid #e5e7eb;
+.small-note {
+  font-size: 13px;
+  color: #6b7280;
+  margin-top: 12px;
+  line-height: 1.4;
+}
+
+.result-card h2 {
+  margin-top: 0;
+  color: #111827;
 }
 
 .price {
-  font-size: 32px;
-  font-weight: bold;
+  font-size: 28px;
+  font-weight: 800;
+  color: #111827;
+  margin: 12px 0 18px;
+}
+
+.result-card p {
+  line-height: 1.5;
   margin: 10px 0;
 }
 
+.result-card h3 {
+  margin-top: 22px;
+  margin-bottom: 10px;
+  color: #374151;
+}
+
+.result-card ul {
+  padding-left: 18px;
+  margin: 0;
+}
+
+.result-card li {
+  margin-bottom: 8px;
+  line-height: 1.5;
+}
+
 .note {
-  margin-top: 20px;
   font-size: 14px;
-  color: gray;
+  color: #6b7280;
+  margin-top: 18px;
+  line-height: 1.5;
 }

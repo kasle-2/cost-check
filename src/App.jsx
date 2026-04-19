@@ -261,33 +261,30 @@ export default function App() {
             low: Math.round(lowWithVat),
             high: Math.round(highWithVat),
             avg: Math.round(avgWithVat),
-            avgPerSqmLow: Math.round(lowWithVat / area),
-            avgPerSqmHigh: Math.round(highWithVat / area),
             breakdown,
             quote: quote > 0 ? quote : null,
             comparisonMessage,
             status,
             duration: `${daysLow} - ${daysHigh} ημέρες`,
-            vatIncluded: true,
         });
     }
 
     return (
         <div className="container">
             <h1>Cost Check</h1>
-            <p>
+            <p className="intro-text">
                 Υπολόγισε ενδεικτικό κόστος ανακαίνισης για κουζίνα ή μπάνιο και
                 σύγκρινε την προσφορά που πήρες.
             </p>
 
             <div className="card">
-                <label>Ενότητα</label>
+                <label className="field-label">Ενότητα</label>
                 <select value={section} onChange={(e) => setSection(e.target.value)}>
                     <option value="kitchen">Κουζίνα</option>
                     <option value="bathroom">Μπάνιο</option>
                 </select>
 
-                <label>Τετραγωνικά (m²)</label>
+                <label className="field-label">Τετραγωνικά (m²)</label>
                 <input
                     type="number"
                     value={sqm}
@@ -295,127 +292,131 @@ export default function App() {
                     placeholder="π.χ. 12"
                 />
 
-                <label>Ποιότητα</label>
+                <label className="field-label">Ποιότητα</label>
                 <select value={quality} onChange={(e) => setQuality(e.target.value)}>
                     <option value="standard">Standard</option>
                     <option value="premium">Premium</option>
                 </select>
 
-                <label>Περιοχή</label>
+                <label className="field-label">Περιοχή</label>
                 <select value={region} onChange={(e) => setRegion(e.target.value)}>
                     <option value="athens">Αθήνα</option>
                     <option value="thessaloniki">Θεσσαλονίκη</option>
                     <option value="other">Υπόλοιπη Ελλάδα</option>
                 </select>
 
-                <label>
-                    <input
-                        type="checkbox"
-                        checked={hasPrep}
-                        onChange={(e) => setHasPrep(e.target.checked)}
-                    />
-                    Αποξήλωση & προετοιμασία
-                </label>
+                <div className="options-group">
+                    <label className="checkbox-row">
+                        <span>Αποξήλωση & προετοιμασία</span>
+                        <input
+                            type="checkbox"
+                            checked={hasPrep}
+                            onChange={(e) => setHasPrep(e.target.checked)}
+                        />
+                    </label>
 
-                {section === "kitchen" && (
-                    <>
-                        <label>
-                            <input
-                                type="checkbox"
-                                checked={hasCabinets}
-                                onChange={(e) => setHasCabinets(e.target.checked)}
-                            />
-                            Νέα ντουλάπια
-                        </label>
+                    {section === "kitchen" && (
+                        <>
+                            <label className="checkbox-row">
+                                <span>Νέα ντουλάπια</span>
+                                <input
+                                    type="checkbox"
+                                    checked={hasCabinets}
+                                    onChange={(e) => setHasCabinets(e.target.checked)}
+                                />
+                            </label>
 
-                        <label>
-                            <input
-                                type="checkbox"
-                                checked={hasCountertop}
-                                onChange={(e) => setHasCountertop(e.target.checked)}
-                            />
-                            Νέος πάγκος
-                        </label>
+                            <label className="checkbox-row">
+                                <span>Νέος πάγκος</span>
+                                <input
+                                    type="checkbox"
+                                    checked={hasCountertop}
+                                    onChange={(e) => setHasCountertop(e.target.checked)}
+                                />
+                            </label>
 
-                        <label>
-                            <input
-                                type="checkbox"
-                                checked={hasPainting}
-                                onChange={(e) => setHasPainting(e.target.checked)}
-                            />
-                            Βάψιμο
-                        </label>
+                            <label className="checkbox-row">
+                                <span>Βάψιμο</span>
+                                <input
+                                    type="checkbox"
+                                    checked={hasPainting}
+                                    onChange={(e) => setHasPainting(e.target.checked)}
+                                />
+                            </label>
 
-                        <label>
-                            <input
-                                type="checkbox"
-                                checked={hasFloor}
-                                onChange={(e) => setHasFloor(e.target.checked)}
-                            />
-                            Νέο δάπεδο
-                        </label>
+                            <label className="checkbox-row">
+                                <span>Νέο δάπεδο</span>
+                                <input
+                                    type="checkbox"
+                                    checked={hasFloor}
+                                    onChange={(e) => setHasFloor(e.target.checked)}
+                                />
+                            </label>
 
-                        <label>
-                            <input
-                                type="checkbox"
-                                checked={hasInstallations}
-                                onChange={(e) => setHasInstallations(e.target.checked)}
-                            />
-                            Υδραυλικά & ηλεκτρολογικά
-                        </label>
-                    </>
-                )}
+                            <label className="checkbox-row">
+                                <span>Υδραυλικά & ηλεκτρολογικά</span>
+                                <input
+                                    type="checkbox"
+                                    checked={hasInstallations}
+                                    onChange={(e) => setHasInstallations(e.target.checked)}
+                                />
+                            </label>
+                        </>
+                    )}
 
-                {section === "bathroom" && (
-                    <>
-                        <label>
-                            <input
-                                type="checkbox"
-                                checked={hasSanitary}
-                                onChange={(e) => setHasSanitary(e.target.checked)}
-                            />
-                            Νέα είδη υγιεινής
-                        </label>
+                    {section === "bathroom" && (
+                        <>
+                            <label className="checkbox-row">
+                                <span>Νέα είδη υγιεινής</span>
+                                <input
+                                    type="checkbox"
+                                    checked={hasSanitary}
+                                    onChange={(e) => setHasSanitary(e.target.checked)}
+                                />
+                            </label>
 
-                        <label>
-                            <input
-                                type="checkbox"
-                                checked={hasTiles}
-                                onChange={(e) => setHasTiles(e.target.checked)}
-                            />
-                            Νέα πλακάκια
-                        </label>
+                            <label className="checkbox-row">
+                                <span>Νέα πλακάκια</span>
+                                <input
+                                    type="checkbox"
+                                    checked={hasTiles}
+                                    onChange={(e) => setHasTiles(e.target.checked)}
+                                />
+                            </label>
 
-                        <label>
-                            <input
-                                type="checkbox"
-                                checked={hasBathroomPainting}
-                                onChange={(e) => setHasBathroomPainting(e.target.checked)}
-                            />
-                            Βάψιμο
-                        </label>
+                            <label className="checkbox-row">
+                                <span>Βάψιμο</span>
+                                <input
+                                    type="checkbox"
+                                    checked={hasBathroomPainting}
+                                    onChange={(e) => setHasBathroomPainting(e.target.checked)}
+                                />
+                            </label>
 
-                        <label>
-                            <input
-                                type="checkbox"
-                                checked={hasBathroomFloor}
-                                onChange={(e) => setHasBathroomFloor(e.target.checked)}
-                            />
-                            Νέο δάπεδο
-                        </label>
+                            <label className="checkbox-row">
+                                <span>Νέο δάπεδο</span>
+                                <input
+                                    type="checkbox"
+                                    checked={hasBathroomFloor}
+                                    onChange={(e) => setHasBathroomFloor(e.target.checked)}
+                                />
+                            </label>
 
-                        <label>
-                            <input
-                                type="checkbox"
-                                checked={hasBathroomInstallations}
-                                onChange={(e) => setHasBathroomInstallations(e.target.checked)}
-                            />
-                            Υδραυλικά & ηλεκτρολογικά
-                        </label>
-                    </>
-                )}
+                            <label className="checkbox-row">
+                                <span>Υδραυλικά & ηλεκτρολογικά</span>
+                                <input
+                                    type="checkbox"
+                                    checked={hasBathroomInstallations}
+                                    onChange={(e) =>
+                                        setHasBathroomInstallations(e.target.checked)
+                                    }
+                                />
+                            </label>
+                        </>
+                    )}
+                </div>
 
-                <label>Προσφορά εργολάβου (€) - προαιρετικά</label>
+                <label className="field-label">Προσφορά εργολάβου (€) - προαιρετικά</label>
                 <input
                     type="number"
                     value={userQuote}
@@ -425,15 +426,8 @@ export default function App() {
 
                 <button onClick={calculateEstimate}>Υπολογισμός</button>
 
-                <p
-                    style={{
-                        fontSize: "13px",
-                        color: "#666",
-                        marginTop: "10px",
-                        lineHeight: "1.4",
-                    }}
-                >
-                    Οι τελικές τιμές εμφανίζονται με ΦΠΑ 24%.
+                <p className="small-note">
+                    Οι τελικές τιμές περιλαμβάνουν ΦΠΑ 24%.
                 </p>
             </div>
 
@@ -447,10 +441,6 @@ export default function App() {
                     </p>
 
                     <p>Μέσο κόστος: {result.avg.toLocaleString("el-GR")} €</p>
-
-                    <p>
-                        €/m²: {result.avgPerSqmLow} - {result.avgPerSqmHigh}
-                    </p>
 
                     <p>Εκτιμώμενη διάρκεια: {result.duration}</p>
 
@@ -488,17 +478,6 @@ export default function App() {
                             </li>
                         ))}
                     </ul>
-
-                    <p
-                        style={{
-                            fontSize: "13px",
-                            color: "#666",
-                            marginTop: "12px",
-                        }}
-                    >
-                        * Το συνολικό αποτέλεσμα υπολογίζεται με βάση την περιοχή και
-                        περιλαμβάνει ΦΠΑ 24%.
-                    </p>
 
                     <p className="note">
                         ⚠️ Δεν περιλαμβάνονται συσκευές, άδειες, μηχανικός, στατικές
