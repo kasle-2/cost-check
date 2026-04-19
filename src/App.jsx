@@ -12,6 +12,9 @@ export default function App() {
 
     const [hasCabinets, setHasCabinets] = useState(true);
     const [hasCountertop, setHasCountertop] = useState(true);
+    const [hasPainting, setHasPainting] = useState(false);
+    const [hasFloor, setHasFloor] = useState(false);
+    const [hasInstallations, setHasInstallations] = useState(false);
 
     const [userQuote, setUserQuote] = useState("");
     const [result, setResult] = useState(null);
@@ -73,6 +76,48 @@ export default function App() {
                     label: "Νέος πάγκος",
                     low: countertopLow,
                     high: countertopHigh,
+                });
+            }
+
+            if (hasPainting) {
+                const paintLow = area * 10;
+                const paintHigh = area * 20;
+
+                low += paintLow;
+                high += paintHigh;
+
+                breakdown.push({
+                    label: "Βάψιμο",
+                    low: paintLow,
+                    high: paintHigh,
+                });
+            }
+
+            if (hasFloor) {
+                const floorLow = area * 30;
+                const floorHigh = area * 80;
+
+                low += floorLow;
+                high += floorHigh;
+
+                breakdown.push({
+                    label: "Νέο δάπεδο",
+                    low: floorLow,
+                    high: floorHigh,
+                });
+            }
+
+            if (hasInstallations) {
+                const instLow = 800;
+                const instHigh = 2500;
+
+                low += instLow;
+                high += instHigh;
+
+                breakdown.push({
+                    label: "Υδραυλικά & ηλεκτρολογικά",
+                    low: instLow,
+                    high: instHigh,
                 });
             }
         }
@@ -173,6 +218,33 @@ export default function App() {
                                 onChange={(e) => setHasCountertop(e.target.checked)}
                             />
                             Νέος πάγκος
+                        </label>
+
+                        <label>
+                            <input
+                                type="checkbox"
+                                checked={hasPainting}
+                                onChange={(e) => setHasPainting(e.target.checked)}
+                            />
+                            Βάψιμο
+                        </label>
+
+                        <label>
+                            <input
+                                type="checkbox"
+                                checked={hasFloor}
+                                onChange={(e) => setHasFloor(e.target.checked)}
+                            />
+                            Νέο δάπεδο
+                        </label>
+
+                        <label>
+                            <input
+                                type="checkbox"
+                                checked={hasInstallations}
+                                onChange={(e) => setHasInstallations(e.target.checked)}
+                            />
+                            Υδραυλικά & ηλεκτρολογικά
                         </label>
                     </>
                 )}
