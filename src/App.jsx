@@ -237,7 +237,7 @@ export default function App() {
                 <button onClick={calculateEstimate}>Υπολογισμός</button>
 
                 <p className="small-note">
-                    Οι τελικές τιμές περιλαμβάνουν ΦΠΑ 24%.
+                    Οι τιμές περιλαμβάνουν υλικά, εργασία και ΦΠΑ 24%.
                 </p>
             </div>
 
