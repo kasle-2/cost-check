@@ -22,7 +22,6 @@ export default function App() {
     const [hasSanitary, setHasSanitary] = useState(true);
     const [hasTiles, setHasTiles] = useState(true);
     const [hasBathroomPainting, setHasBathroomPainting] = useState(false);
-    const [hasBathroomFloor, setHasBathroomFloor] = useState(false);
     const [hasBathroomInstallations, setHasBathroomInstallations] =
         useState(false);
 
@@ -158,7 +157,7 @@ export default function App() {
                 high += tilesHigh;
 
                 breakdown.push({
-                    label: "Νέα πλακάκια",
+                    label: "Νέα πλακάκια (τοίχος + δάπεδο)",
                     low: tilesLow,
                     high: tilesHigh,
                 });
@@ -175,20 +174,6 @@ export default function App() {
                     label: "Βάψιμο",
                     low: bathPaintLow,
                     high: bathPaintHigh,
-                });
-            }
-
-            if (hasBathroomFloor) {
-                const bathFloorLow = area * 35 * qf;
-                const bathFloorHigh = area * 90 * qf;
-
-                low += bathFloorLow;
-                high += bathFloorHigh;
-
-                breakdown.push({
-                    label: "Νέο δάπεδο",
-                    low: bathFloorLow,
-                    high: bathFloorHigh,
                 });
             }
 
@@ -278,7 +263,7 @@ export default function App() {
             </p>
 
             <div className="card">
-                <label className="field-label">Ενότητα</label>
+                <label className="field-label">Χώρος</label>
                 <select value={section} onChange={(e) => setSection(e.target.value)}>
                     <option value="kitchen">Κουζίνα</option>
                     <option value="bathroom">Μπάνιο</option>
@@ -376,7 +361,7 @@ export default function App() {
                             </label>
 
                             <label className="checkbox-row">
-                                <span>Νέα πλακάκια</span>
+                                <span>Νέα πλακάκια (τοίχος + δάπεδο)</span>
                                 <input
                                     type="checkbox"
                                     checked={hasTiles}
@@ -394,15 +379,6 @@ export default function App() {
                             </label>
 
                             <label className="checkbox-row">
-                                <span>Νέο δάπεδο</span>
-                                <input
-                                    type="checkbox"
-                                    checked={hasBathroomFloor}
-                                    onChange={(e) => setHasBathroomFloor(e.target.checked)}
-                                />
-                            </label>
-
-                            <label className="checkbox-row">
                                 <span>Υδραυλικά & ηλεκτρολογικά</span>
                                 <input
                                     type="checkbox"
@@ -416,7 +392,9 @@ export default function App() {
                     )}
                 </div>
 
-                <label className="field-label">Προσφορά εργολάβου (€) - προαιρετικά</label>
+                <label className="field-label">
+                    Προσφορά εργολάβου (€) - προαιρετικά
+                </label>
                 <input
                     type="number"
                     value={userQuote}
