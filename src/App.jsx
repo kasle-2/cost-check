@@ -29,11 +29,10 @@ export default function App() {
 
         const base = costData.renovationBase[renovationType];
         const qf = costData.qualityFactor[quality];
-        const rf = costData.regionFactor[region];
-        const pf = costData.propertyFactor[propertyType];
 
-        let low = area * base.low * qf * rf * pf;
-        let high = area * base.high * qf * rf * pf;
+
+        let low = area * base.low * qf;
+        let high = area * base.high * qf;
 
         const breakdown = [
             {
@@ -53,7 +52,7 @@ export default function App() {
             high += kitchenHigh;
 
             breakdown.push({
-                label: "Κουζίνα",
+                label: "Ντουλάπια",
                 low: kitchenLow,
                 high: kitchenHigh,
             });
@@ -69,7 +68,7 @@ export default function App() {
             high += bathHigh;
 
             breakdown.push({
-                label: "Μπάνιο",
+                label: "Πάγκος",
                 low: bathLow,
                 high: bathHigh,
             });
@@ -121,22 +120,18 @@ export default function App() {
                     <option value="kitchen">Κουζίνα</option>
                     <option value="bathroom">Μπάνιο</option>
                 </select>
-                <label>Τετραγωνικά (m²)</label>
+                <label>
+                    {section === "kitchen"
+                        ? "Τετραγωνικά κουζίνας (m²)"
+                        : "Τετραγωνικά μπάνιου (m²)"}
+                </label>
                 <input
                     type="number"
                     value={sqm}
                     onChange={(e) => setSqm(e.target.value)}
                 />
 
-                <label>Τύπος ακινήτου</label>
-                <select
-                    value={propertyType}
-                    onChange={(e) => setPropertyType(e.target.value)}
-                >
-                    <option value="apartment">Διαμέρισμα</option>
-                    <option value="office">Γραφείο</option>
-                    <option value="shop">Κατάστημα</option>
-                </select>
+
 
                 <label>Είδος ανακαίνισης</label>
                 <select
@@ -155,12 +150,7 @@ export default function App() {
                     <option value="premium">Premium</option>
                 </select>
 
-                <label>Περιοχή</label>
-                <select value={region} onChange={(e) => setRegion(e.target.value)}>
-                    <option value="athens">Αθήνα</option>
-                    <option value="thessaloniki">Θεσσαλονίκη</option>
-                    <option value="other">Υπόλοιπη Ελλάδα</option>
-                </select>
+
 
                 <label>
                     <input
@@ -168,7 +158,7 @@ export default function App() {
                         checked={hasKitchen}
                         onChange={(e) => setHasKitchen(e.target.checked)}
                     />
-                    Κουζίνα
+                    Νέα ντουλάπια
                 </label>
 
                 <label>
@@ -177,7 +167,7 @@ export default function App() {
                         checked={hasBathroom}
                         onChange={(e) => setHasBathroom(e.target.checked)}
                     />
-                    Μπάνιο
+                    Νέος πάγκος
                 </label>
 
                 <label>Προσφορά (προαιρετικά)</label>
