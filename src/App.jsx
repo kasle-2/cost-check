@@ -195,7 +195,7 @@ export default function App() {
 
             {result && (
                 <div className="result-card">
-                    <h2>Εκτιμώμενο κόστος</h2>
+                    <h2>💰 Εκτιμώμενο κόστος</h2>
 
                     <p className="price">
                         {result.low.toLocaleString("el-GR")} € — {result.high.toLocaleString("el-GR")} €
