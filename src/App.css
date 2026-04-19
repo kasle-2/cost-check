@@ -1,112 +1,73 @@
-* {
-  box-sizing: border-box;
-}
-
 body {
   margin: 0;
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: Arial, sans-serif;
   background: #f3f4f6;
-  color: #111827;
 }
 
 .container {
-  max-width: 800px;
-  margin: 40px auto;
+  max-width: 900px;
+  margin: 60px auto;
   padding: 20px;
+  text-align: center;
 }
 
 h1 {
-  margin-bottom: 8px;
   font-size: 36px;
+  margin-bottom: 5px;
 }
 
-.subtitle {
-  margin-bottom: 24px;
-  color: #4b5563;
-}
-
-.card,
-.result-card {
-  background: #ffffff;
-  padding: 24px;
+.card {
+  background: white;
+  padding: 30px;
   border-radius: 16px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
-  margin-bottom: 24px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+  max-width: 500px;
+  margin: 0 auto;
+  text-align: left;
 }
 
 label {
   display: block;
-  margin-top: 16px;
-  margin-bottom: 8px;
+  margin-top: 15px;
+  margin-bottom: 5px;
   font-weight: 600;
 }
 
-input,
-select {
+input, select {
   width: 100%;
-  padding: 12px 14px;
-  border: 1px solid #d1d5db;
+  padding: 12px;
   border-radius: 10px;
-  font-size: 15px;
-}
-
-.checkbox-group {
-  margin-top: 18px;
-}
-
-.checkbox-label {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-weight: 500;
-  margin-bottom: 10px;
-}
-
-.checkbox-label input {
-  width: auto;
+  border: 1px solid #ddd;
 }
 
 button {
+  margin-top: 25px;
   width: 100%;
-  margin-top: 24px;
-  padding: 14px;
+  padding: 15px;
   border: none;
   border-radius: 12px;
-  background: #111827;
+  background: black;
   color: white;
   font-size: 16px;
-  font-weight: 700;
   cursor: pointer;
 }
 
-button:hover {
-  opacity: 0.95;
+.result-card {
+  margin-top: 30px;
+  background: white;
+  padding: 30px;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
 }
 
-.price-range {
-  font-size: 28px;
-  font-weight: 800;
-  margin: 12px 0;
-}
-
-ul {
-  padding-left: 20px;
-}
-
-li {
-  margin-bottom: 10px;
-}
-
-.quote-box {
-  margin-top: 24px;
-  padding: 16px;
-  border-radius: 12px;
-  background: #f9fafb;
-  border: 1px solid #e5e7eb;
+.price {
+  font-size: 32px;
+  font-weight: bold;
+  margin: 10px 0;
 }
 
 .note {
-  margin-top: 24px;
+  margin-top: 20px;
   font-size: 14px;
-  color: #6b7280;
+  color: gray;
 }

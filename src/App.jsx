@@ -195,17 +195,23 @@ export default function App() {
 
             {result && (
                 <div className="result-card">
-                    <h2>Αποτέλεσμα</h2>
+                    <h2>Εκτιμώμενο κόστος</h2>
+
+                    <p className="price">
+                        {result.low.toLocaleString("el-GR")} € — {result.high.toLocaleString("el-GR")} €
+                    </p>
 
                     <p>
-                        {result.low.toLocaleString("el-GR")} € -{" "}
-                        {result.high.toLocaleString("el-GR")} €
+                        Μέσο κόστος: {result.avg.toLocaleString("el-GR")} €
                     </p>
 
                     <p>
                         €/m²: {result.avgPerSqmLow} - {result.avgPerSqmHigh}
                     </p>
 
+                    <p className="note">
+                        Η εκτίμηση βασίζεται σε ενδεικτικές τιμές αγοράς και δεν αποτελεί δεσμευτική προσφορά.
+                    </p>
                     <h3>Ανάλυση</h3>
                     <ul>
                         {result.breakdown.map((item, i) => (
