@@ -96,13 +96,18 @@ export default function App() {
         const avg = (low + high) / 2;
 
         let comparisonMessage = "";
+        let percentage = 0;
+
+        if (quote > 0) {
+            percentage = Math.round(((quote - avg) / avg) * 100);
+        }
         if (quote > 0) {
             if (quote < low) {
-                comparisonMessage = "Η προσφορά είναι χαμηλότερη από το εύρος.";
+                comparisonMessage = `Η προσφορά είναι ${Math.abs(percentage)}% κάτω από τον μέσο όρο`;
             } else if (quote > high) {
-                comparisonMessage = "Η προσφορά είναι υψηλότερη από το εύρος.";
+                comparisonMessage = `Η προσφορά είναι ${Math.abs(percentage)}% πάνω από τον μέσο όρο`;
             } else {
-                comparisonMessage = "Η προσφορά είναι μέσα στο εύρος.";
+                comparisonMessage = `Η προσφορά είναι κοντά στον μέσο όρο (${percentage}%)`;
             }
         }
 
