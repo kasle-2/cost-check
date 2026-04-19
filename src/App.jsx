@@ -7,9 +7,9 @@ export default function App() {
     const [sqm, setSqm] = useState("");
     const [quality, setQuality] = useState("standard");
     const [region, setRegion] = useState("athens");
-    const [includeVAT, setIncludeVAT] = useState(true);
 
-    const [hasBaseWorks, setHasBaseWorks] = useState(true);
+    // Κοινό
+    const [hasPrep, setHasPrep] = useState(true);
 
     // Kitchen
     const [hasCabinets, setHasCabinets] = useState(true);
@@ -49,17 +49,17 @@ export default function App() {
         let high = 0;
         const breakdown = [];
 
-        if (hasBaseWorks) {
-            const baseLow = area * 80 * qf;
-            const baseHigh = area * 180 * qf;
+        if (hasPrep) {
+            const prepLow = area * 20 * qf;
+            const prepHigh = area * 50 * qf;
 
-            low += baseLow;
-            high += baseHigh;
+            low += prepLow;
+            high += prepHigh;
 
             breakdown.push({
-                label: "Βασικές εργασίες",
-                low: baseLow,
-                high: baseHigh,
+                label: "Αποξήλωση & προετοιμασία",
+                low: prepLow,
+                high: prepHigh,
             });
         }
 
@@ -231,25 +231,22 @@ export default function App() {
         low *= rf;
         high *= rf;
 
-        if (includeVAT) {
-            low *= 1.24;
-            high *= 1.24;
-        }
-
-        const avg = (low + high) / 2;
+        const lowWithVat = low * 1.24;
+        const highWithVat = high * 1.24;
+        const avgWithVat = (lowWithVat + highWithVat) / 2;
 
         let comparisonMessage = "";
         let status = "";
 
-        if (quote > 0 && avg > 0) {
-            const percentage = Math.round(((quote - avg) / avg) * 100);
+        if (quote > 0 && avgWithVat > 0) {
+            const percentage = Math.round(((quote - avgWithVat) / avgWithVat) * 100);
 
-            if (quote < low) {
+            if (quote < lowWithVat) {
                 comparisonMessage = `Η προσφορά είναι ${Math.abs(
                     percentage
                 )}% κάτω από τον μέσο όρο`;
                 status = "cheap";
-            } else if (quote > high) {
+            } else if (quote > highWithVat) {
                 comparisonMessage = `Η προσφορά είναι ${Math.abs(
                     percentage
                 )}% πάνω από τον μέσο όρο`;
@@ -261,16 +258,17 @@ export default function App() {
         }
 
         setResult({
-            low: Math.round(low),
-            high: Math.round(high),
-            avg: Math.round(avg),
-            avgPerSqmLow: Math.round(low / area),
-            avgPerSqmHigh: Math.round(high / area),
+            low: Math.round(lowWithVat),
+            high: Math.round(highWithVat),
+            avg: Math.round(avgWithVat),
+            avgPerSqmLow: Math.round(lowWithVat / area),
+            avgPerSqmHigh: Math.round(highWithVat / area),
             breakdown,
             quote: quote > 0 ? quote : null,
             comparisonMessage,
             status,
             duration: `${daysLow} - ${daysHigh} ημέρες`,
+            vatIncluded: true,
         });
     }
 
@@ -313,19 +311,10 @@ export default function App() {
                 <label>
                     <input
                         type="checkbox"
-                        checked={includeVAT}
-                        onChange={(e) => setIncludeVAT(e.target.checked)}
+                        checked={hasPrep}
+                        onChange={(e) => setHasPrep(e.target.checked)}
                     />
-                    Συμπερίληψη ΦΠΑ (24%)
-                </label>
-
-                <label>
-                    <input
-                        type="checkbox"
-                        checked={hasBaseWorks}
-                        onChange={(e) => setHasBaseWorks(e.target.checked)}
-                    />
-                    Βασικές εργασίες
+                    Αποξήλωση & προετοιμασία
                 </label>
 
                 {section === "kitchen" && (
@@ -435,6 +424,17 @@ export default function App() {
                 />
 
                 <button onClick={calculateEstimate}>Υπολογισμός</button>
+
+                <p
+                    style={{
+                        fontSize: "13px",
+                        color: "#666",
+                        marginTop: "10px",
+                        lineHeight: "1.4",
+                    }}
+                >
+                    Οι τελικές τιμές εμφανίζονται με ΦΠΑ 24%.
+                </p>
             </div>
 
             {result && (
@@ -488,6 +488,17 @@ export default function App() {
                             </li>
                         ))}
                     </ul>
+
+                    <p
+                        style={{
+                            fontSize: "13px",
+                            color: "#666",
+                            marginTop: "12px",
+                        }}
+                    >
+                        * Το συνολικό αποτέλεσμα υπολογίζεται με βάση την περιοχή και
+                        περιλαμβάνει ΦΠΑ 24%.
+                    </p>
 
                     <p className="note">
                         ⚠️ Δεν περιλαμβάνονται συσκευές, άδειες, μηχανικός, στατικές
