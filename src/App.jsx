@@ -10,11 +10,19 @@ export default function App() {
     const [quality, setQuality] = useState("standard");
     const [region, setRegion] = useState("athens");
 
+    // Kitchen
     const [hasCabinets, setHasCabinets] = useState(true);
     const [hasCountertop, setHasCountertop] = useState(true);
     const [hasPainting, setHasPainting] = useState(false);
     const [hasFloor, setHasFloor] = useState(false);
     const [hasInstallations, setHasInstallations] = useState(false);
+
+    // Bathroom
+    const [hasSanitary, setHasSanitary] = useState(true);
+    const [hasTiles, setHasTiles] = useState(true);
+    const [hasBathroomPainting, setHasBathroomPainting] = useState(false);
+    const [hasBathroomFloor, setHasBathroomFloor] = useState(false);
+    const [hasBathroomInstallations, setHasBathroomInstallations] = useState(false);
 
     const [userQuote, setUserQuote] = useState("");
     const [result, setResult] = useState(null);
@@ -118,6 +126,82 @@ export default function App() {
                     label: "Υδραυλικά & ηλεκτρολογικά",
                     low: instLow,
                     high: instHigh,
+                });
+            }
+        }
+
+        if (section === "bathroom") {
+            if (hasSanitary) {
+                const sanitaryLow =
+                    quality === "premium" ? 3500 : quality === "basic" ? 1200 : 2200;
+                const sanitaryHigh =
+                    quality === "premium" ? 7000 : quality === "basic" ? 2500 : 4500;
+
+                low += sanitaryLow;
+                high += sanitaryHigh;
+
+                breakdown.push({
+                    label: "Νέα είδη υγιεινής",
+                    low: sanitaryLow,
+                    high: sanitaryHigh,
+                });
+            }
+
+            if (hasTiles) {
+                const tilesLow = area * (quality === "premium" ? 90 : quality === "basic" ? 35 : 55);
+                const tilesHigh = area * (quality === "premium" ? 160 : quality === "basic" ? 70 : 110);
+
+                low += tilesLow;
+                high += tilesHigh;
+
+                breakdown.push({
+                    label: "Νέα πλακάκια",
+                    low: tilesLow,
+                    high: tilesHigh,
+                });
+            }
+
+            if (hasBathroomPainting) {
+                const bathPaintLow = area * 12;
+                const bathPaintHigh = area * 25;
+
+                low += bathPaintLow;
+                high += bathPaintHigh;
+
+                breakdown.push({
+                    label: "Βάψιμο",
+                    low: bathPaintLow,
+                    high: bathPaintHigh,
+                });
+            }
+
+            if (hasBathroomFloor) {
+                const bathFloorLow = area * 35;
+                const bathFloorHigh = area * 90;
+
+                low += bathFloorLow;
+                high += bathFloorHigh;
+
+                breakdown.push({
+                    label: "Νέο δάπεδο",
+                    low: bathFloorLow,
+                    high: bathFloorHigh,
+                });
+            }
+
+            if (hasBathroomInstallations) {
+                const bathInstLow =
+                    quality === "premium" ? 1800 : quality === "basic" ? 700 : 1200;
+                const bathInstHigh =
+                    quality === "premium" ? 4000 : quality === "basic" ? 1800 : 2800;
+
+                low += bathInstLow;
+                high += bathInstHigh;
+
+                breakdown.push({
+                    label: "Υδραυλικά & ηλεκτρολογικά",
+                    low: bathInstLow,
+                    high: bathInstHigh,
                 });
             }
         }
@@ -243,6 +327,55 @@ export default function App() {
                                 type="checkbox"
                                 checked={hasInstallations}
                                 onChange={(e) => setHasInstallations(e.target.checked)}
+                            />
+                            Υδραυλικά & ηλεκτρολογικά
+                        </label>
+                    </>
+                )}
+
+                {section === "bathroom" && (
+                    <>
+                        <label>
+                            <input
+                                type="checkbox"
+                                checked={hasSanitary}
+                                onChange={(e) => setHasSanitary(e.target.checked)}
+                            />
+                            Νέα είδη υγιεινής
+                        </label>
+
+                        <label>
+                            <input
+                                type="checkbox"
+                                checked={hasTiles}
+                                onChange={(e) => setHasTiles(e.target.checked)}
+                            />
+                            Νέα πλακάκια
+                        </label>
+
+                        <label>
+                            <input
+                                type="checkbox"
+                                checked={hasBathroomPainting}
+                                onChange={(e) => setHasBathroomPainting(e.target.checked)}
+                            />
+                            Βάψιμο
+                        </label>
+
+                        <label>
+                            <input
+                                type="checkbox"
+                                checked={hasBathroomFloor}
+                                onChange={(e) => setHasBathroomFloor(e.target.checked)}
+                            />
+                            Νέο δάπεδο
+                        </label>
+
+                        <label>
+                            <input
+                                type="checkbox"
+                                checked={hasBathroomInstallations}
+                                onChange={(e) => setHasBathroomInstallations(e.target.checked)}
                             />
                             Υδραυλικά & ηλεκτρολογικά
                         </label>
