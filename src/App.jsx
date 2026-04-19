@@ -223,8 +223,19 @@ export default function App() {
                     </ul>
 
                     {result.quote && (
-                        <p>
-                            Προσφορά: {result.quote}€ → {result.comparisonMessage}
+                        <p
+                            style={{
+                                marginTop: "20px",
+                                fontWeight: "bold",
+                                color:
+                                    result.quote < result.low
+                                        ? "green"
+                                        : result.quote > result.high
+                                            ? "red"
+                                            : "#2563eb",
+                            }}
+                        >
+                            Προσφορά: {result.quote.toLocaleString("el-GR")} € → {result.comparisonMessage}
                         </p>
                     )}
                 </div>
