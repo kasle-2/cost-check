@@ -53,13 +53,13 @@ export default function App() {
         let low = area * base.low * qf * rf * pf;
         let high = area * base.high * qf * rf * pf;
 
-        const breakdown = [];
-
-        breakdown.push({
-            label: "Βασικές εργασίες",
-            low,
-            high,
-        });
+        const breakdown = [
+            {
+                label: "Βασικές εργασίες",
+                low,
+                high,
+            },
+        ];
 
         if (hasKitchen) {
             const kitchenLow =
@@ -78,18 +78,18 @@ export default function App() {
         }
 
         if (hasBathroom) {
-            const bathroomLow =
+            const bathLow =
                 quality === "premium" ? 5000 : quality === "basic" ? 2500 : 3500;
-            const bathroomHigh =
+            const bathHigh =
                 quality === "premium" ? 10000 : quality === "basic" ? 5000 : 7000;
 
-            low += bathroomLow;
-            high += bathroomHigh;
+            low += bathLow;
+            high += bathHigh;
 
             breakdown.push({
                 label: "Μπάνιο",
-                low: bathroomLow,
-                high: bathroomHigh,
+                low: bathLow,
+                high: bathHigh,
             });
         }
 
@@ -98,11 +98,11 @@ export default function App() {
         let comparisonMessage = "";
         if (quote > 0) {
             if (quote < low) {
-                comparisonMessage = "Η προσφορά σου είναι κάτω από το εκτιμώμενο εύρος.";
+                comparisonMessage = "Η προσφορά είναι χαμηλότερη από το εύρος.";
             } else if (quote > high) {
-                comparisonMessage = "Η προσφορά σου είναι πάνω από το εκτιμώμενο εύρος.";
+                comparisonMessage = "Η προσφορά είναι υψηλότερη από το εύρος.";
             } else {
-                comparisonMessage = "Η προσφορά σου είναι μέσα στο εκτιμώμενο εύρος.";
+                comparisonMessage = "Η προσφορά είναι μέσα στο εύρος.";
             }
         }
 
@@ -121,13 +121,12 @@ export default function App() {
     return (
         <div className="container">
             <h1>Cost Check</h1>
-            <p className="subtitle">Υπολογισμός ενδεικτικού κόστους ανακαίνισης</p>
+            <p>Υπολογισμός κόστους ανακαίνισης</p>
 
             <div className="card">
                 <label>Τετραγωνικά (m²)</label>
                 <input
                     type="number"
-                    placeholder="π.χ. 85"
                     value={sqm}
                     onChange={(e) => setSqm(e.target.value)}
                 />
@@ -152,7 +151,7 @@ export default function App() {
                     <option value="full">Πλήρης</option>
                 </select>
 
-                <label>Επίπεδο ποιότητας</label>
+                <label>Ποιότητα</label>
                 <select value={quality} onChange={(e) => setQuality(e.target.value)}>
                     <option value="basic">Basic</option>
                     <option value="standard">Standard</option>
@@ -166,30 +165,27 @@ export default function App() {
                     <option value="other">Υπόλοιπη Ελλάδα</option>
                 </select>
 
-                <div className="checkbox-group">
-                    <label className="checkbox-label">
-                        <input
-                            type="checkbox"
-                            checked={hasKitchen}
-                            onChange={(e) => setHasKitchen(e.target.checked)}
-                        />
-                        Νέα κουζίνα
-                    </label>
+                <label>
+                    <input
+                        type="checkbox"
+                        checked={hasKitchen}
+                        onChange={(e) => setHasKitchen(e.target.checked)}
+                    />
+                    Κουζίνα
+                </label>
 
-                    <label className="checkbox-label">
-                        <input
-                            type="checkbox"
-                            checked={hasBathroom}
-                            onChange={(e) => setHasBathroom(e.target.checked)}
-                        />
-                        Ανακαίνιση μπάνιου
-                    </label>
-                </div>
+                <label>
+                    <input
+                        type="checkbox"
+                        checked={hasBathroom}
+                        onChange={(e) => setHasBathroom(e.target.checked)}
+                    />
+                    Μπάνιο
+                </label>
 
-                <label>Προσφορά που πήρες (προαιρετικό)</label>
+                <label>Προσφορά (προαιρετικά)</label>
                 <input
                     type="number"
-                    placeholder="π.χ. 32000"
                     value={userQuote}
                     onChange={(e) => setUserQuote(e.target.value)}
                 />
@@ -201,39 +197,30 @@ export default function App() {
                 <div className="result-card">
                     <h2>Αποτέλεσμα</h2>
 
-                    <p className="price-range">
-                        {result.low.toLocaleString("el-GR")} € —{" "}
+                    <p>
+                        {result.low.toLocaleString("el-GR")} € -{" "}
                         {result.high.toLocaleString("el-GR")} €
                     </p>
 
-                    <p>Μέσο εκτιμώμενο κόστος: {result.avg.toLocaleString("el-GR")} €</p>
                     <p>
-                        Ενδεικτικό εύρος ανά m²: {result.avgPerSqmLow}€ -{" "}
-                        {result.avgPerSqmHigh}€/m²
+                        €/m²: {result.avgPerSqmLow} - {result.avgPerSqmHigh}
                     </p>
 
-                    <h3>Breakdown</h3>
+                    <h3>Ανάλυση</h3>
                     <ul>
-                        {result.breakdown.map((item, index) => (
-                            <li key={index}>
-                                <strong>{item.label}</strong>:{" "}
-                                {Math.round(item.low).toLocaleString("el-GR")} € -{" "}
-                                {Math.round(item.high).toLocaleString("el-GR")} €
+                        {result.breakdown.map((item, i) => (
+                            <li key={i}>
+                                {item.label}: {Math.round(item.low)}€ -{" "}
+                                {Math.round(item.high)}€
                             </li>
                         ))}
                     </ul>
 
                     {result.quote && (
-                        <div className="quote-box">
-                            <h3>Σύγκριση με προσφορά</h3>
-                            <p>Η δική σου προσφορά: {result.quote.toLocaleString("el-GR")} €</p>
-                            <p><strong>{result.comparisonMessage}</strong></p>
-                        </div>
+                        <p>
+                            Προσφορά: {result.quote}€ → {result.comparisonMessage}
+                        </p>
                     )}
-
-                    <p className="note">
-                        Η εκτίμηση είναι ενδεικτική και δεν αποτελεί τελική τεχνική ή οικονομική προσφορά.
-                    </p>
                 </div>
             )}
         </div>
