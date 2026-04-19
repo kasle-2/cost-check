@@ -6,6 +6,8 @@ export default function App() {
     const [section, setSection] = useState("kitchen");
     const [sqm, setSqm] = useState("");
     const [quality, setQuality] = useState("standard");
+    const [region, setRegion] = useState("athens");
+    const [includeVAT, setIncludeVAT] = useState(true);
 
     const [hasBaseWorks, setHasBaseWorks] = useState(true);
 
@@ -41,6 +43,7 @@ export default function App() {
         }
 
         const qf = costData.qualityFactor[quality] || 1;
+        const rf = costData.regionFactor[region] || 1;
 
         let low = 0;
         let high = 0;
@@ -204,6 +207,35 @@ export default function App() {
             }
         }
 
+        let daysLow = 3;
+        let daysHigh = 7;
+
+        if (section === "kitchen") {
+            daysLow = 7;
+            daysHigh = 15;
+
+            if (hasCabinets && hasCountertop && hasFloor) {
+                daysHigh = 20;
+            }
+        }
+
+        if (section === "bathroom") {
+            daysLow = 5;
+            daysHigh = 12;
+
+            if (hasTiles && hasSanitary && hasBathroomInstallations) {
+                daysHigh = 18;
+            }
+        }
+
+        low *= rf;
+        high *= rf;
+
+        if (includeVAT) {
+            low *= 1.24;
+            high *= 1.24;
+        }
+
         const avg = (low + high) / 2;
 
         let comparisonMessage = "";
@@ -238,6 +270,7 @@ export default function App() {
             quote: quote > 0 ? quote : null,
             comparisonMessage,
             status,
+            duration: `${daysLow} - ${daysHigh} ημέρες`,
         });
     }
 
@@ -269,6 +302,22 @@ export default function App() {
                     <option value="standard">Standard</option>
                     <option value="premium">Premium</option>
                 </select>
+
+                <label>Περιοχή</label>
+                <select value={region} onChange={(e) => setRegion(e.target.value)}>
+                    <option value="athens">Αθήνα</option>
+                    <option value="thessaloniki">Θεσσαλονίκη</option>
+                    <option value="other">Υπόλοιπη Ελλάδα</option>
+                </select>
+
+                <label>
+                    <input
+                        type="checkbox"
+                        checked={includeVAT}
+                        onChange={(e) => setIncludeVAT(e.target.checked)}
+                    />
+                    Συμπερίληψη ΦΠΑ (24%)
+                </label>
 
                 <label>
                     <input
@@ -402,6 +451,8 @@ export default function App() {
                     <p>
                         €/m²: {result.avgPerSqmLow} - {result.avgPerSqmHigh}
                     </p>
+
+                    <p>Εκτιμώμενη διάρκεια: {result.duration}</p>
 
                     {result.quote && (
                         <>
