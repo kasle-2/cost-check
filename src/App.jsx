@@ -3,6 +3,7 @@ import "./App.css";
 import { costData } from "./costData";
 
 export default function App() {
+    const [section, setSection] = useState("kitchen");
     const [sqm, setSqm] = useState("");
     const [propertyType, setPropertyType] = useState("apartment");
     const [renovationType, setRenovationType] = useState("partial");
@@ -107,9 +108,19 @@ export default function App() {
     return (
         <div className="container">
             <h1>Cost Check</h1>
-            <p>Υπολογισμός κόστους ανακαίνισης</p>
+            <h1>Cost Check</h1>
+            <p>
+                {section === "kitchen"
+                    ? "Υπολογισμός κόστους ανακαίνισης κουζίνας"
+                    : "Υπολογισμός κόστους ανακαίνισης μπάνιου"}
+            </p>
 
             <div className="card">
+                <label>Ενότητα</label>
+                <select value={section} onChange={(e) => setSection(e.target.value)}>
+                    <option value="kitchen">Κουζίνα</option>
+                    <option value="bathroom">Μπάνιο</option>
+                </select>
                 <label>Τετραγωνικά (m²)</label>
                 <input
                     type="number"
@@ -181,7 +192,9 @@ export default function App() {
 
             {result && (
                 <div className="result-card">
-                    <h2>💰 Εκτιμώμενο κόστος</h2>
+                    <h2>
+                        💰 Εκτιμώμενο κόστος {section === "kitchen" ? "κουζίνας" : "μπάνιου"}
+                    </h2>
 
                     <p className="price">
                         {result.low.toLocaleString("el-GR")} € — {result.high.toLocaleString("el-GR")} €
