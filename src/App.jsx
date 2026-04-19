@@ -108,7 +108,7 @@ export default function App() {
     return (
         <div className="container">
             <h1>Cost Check</h1>
-            <h1>Cost Check</h1>
+
             <p>
                 {section === "kitchen"
                     ? "Υπολογισμός κόστους ανακαίνισης κουζίνας"
