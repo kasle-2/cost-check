@@ -69,6 +69,34 @@ export default function App() {
         };
     }
 
+    function TermsSection() {
+        return (
+            <div className="terms-box">
+                <h3>Όροι χρήσης</h3>
+
+                <p>
+                    Το εργαλείο παρέχει ενδεικτικές εκτιμήσεις κόστους ανακαίνισης
+                    για ενημερωτικούς σκοπούς.
+                </p>
+
+                <p>
+                    Οι υπολογισμοί βασίζονται σε γενικές παραδοχές και μέσες τιμές
+                    αγοράς και δεν αποτελούν δεσμευτική οικονομική ή τεχνική προσφορά.
+                </p>
+
+                <p>
+                    Η τελική τιμή εξαρτάται από το έργο, τα υλικά, την περιοχή και
+                    τον ανάδοχο.
+                </p>
+
+                <p>
+                    Το εργαλείο δεν αντικαθιστά επαγγελματική εκτίμηση μηχανικού ή
+                    εργολάβου.
+                </p>
+            </div>
+        );
+    }
+
     const statusBox = getStatusStyles(result?.status);
 
     return (
@@ -191,7 +219,7 @@ export default function App() {
                             </label>
 
                             <label className="checkbox-row">
-                                <span>Νέα πλακάκια (τοίχος + δάπεδο)</span>
+                                <span>Νέα πλακάκια</span>
                                 <input
                                     type="checkbox"
                                     checked={form.hasTiles}
@@ -245,27 +273,12 @@ export default function App() {
                 <div className="result-card">
                     <h2>💰 Εκτιμώμενο κόστος</h2>
 
-                    <p
-                        style={{
-                            fontSize: "18px",
-                            fontWeight: "bold",
-                            marginBottom: "8px",
-                            color: "#111827",
-                        }}
-                    >
-                        Εκτίμηση αγοράς: {result.low.toLocaleString("el-GR")} € -{" "}
+                    <p className="price">
+                        {result.low.toLocaleString("el-GR")} € —{" "}
                         {result.high.toLocaleString("el-GR")} €
                     </p>
 
-                    <p
-                        style={{
-                            color: "#6b7280",
-                            marginTop: "0",
-                            marginBottom: "16px",
-                        }}
-                    >
-                        Συνήθης τιμή: περίπου {result.avg.toLocaleString("el-GR")} €
-                    </p>
+                    <p>Μέσο κόστος: {result.avg.toLocaleString("el-GR")} €</p>
 
                     <p>Εκτιμώμενη διάρκεια: {result.duration}</p>
 
@@ -302,8 +315,8 @@ export default function App() {
                     </ul>
 
                     <p className="note">
-                        ⚠️ Οι τιμές είναι ενδεικτικές και βασίζονται σε μέσες τιμές
-                        αγοράς. Δεν αποτελούν δεσμευτική προσφορά.
+                        ⚠️ Οι τιμές είναι ενδεικτικές και βασίζονται σε μέσες τιμές αγοράς.
+                        Δεν αποτελούν δεσμευτική προσφορά.
                     </p>
 
                     <p className="note">
@@ -312,6 +325,8 @@ export default function App() {
                     </p>
                 </div>
             )}
+
+            <TermsSection />
         </div>
     );
 }
