@@ -21,7 +21,8 @@ export default function App() {
     const [hasTiles, setHasTiles] = useState(true);
     const [hasBathroomPainting, setHasBathroomPainting] = useState(false);
     const [hasBathroomFloor, setHasBathroomFloor] = useState(false);
-    const [hasBathroomInstallations, setHasBathroomInstallations] = useState(false);
+    const [hasBathroomInstallations, setHasBathroomInstallations] =
+        useState(false);
 
     const [userQuote, setUserQuote] = useState("");
     const [result, setResult] = useState(null);
@@ -61,8 +62,8 @@ export default function App() {
 
         if (section === "kitchen") {
             if (hasCabinets) {
-                const cabinetsLow = (quality === "premium" ? 7000 : 5000) * qf;
-                const cabinetsHigh = (quality === "premium" ? 14000 : 9000) * qf;
+                const cabinetsLow = quality === "premium" ? 7000 : 5000;
+                const cabinetsHigh = quality === "premium" ? 14000 : 9000;
 
                 low += cabinetsLow;
                 high += cabinetsHigh;
@@ -75,8 +76,8 @@ export default function App() {
             }
 
             if (hasCountertop) {
-                const countertopLow = (quality === "premium" ? 5000 : 3500) * qf;
-                const countertopHigh = (quality === "premium" ? 10000 : 7000) * qf;
+                const countertopLow = quality === "premium" ? 5000 : 3500;
+                const countertopHigh = quality === "premium" ? 10000 : 7000;
 
                 low += countertopLow;
                 high += countertopHigh;
@@ -117,8 +118,8 @@ export default function App() {
             }
 
             if (hasInstallations) {
-                const instLow = (quality === "premium" ? 1500 : 1200) * qf;
-                const instHigh = (quality === "premium" ? 3500 : 2500) * qf;
+                const instLow = quality === "premium" ? 1500 : 1200;
+                const instHigh = quality === "premium" ? 3500 : 2500;
 
                 low += instLow;
                 high += instHigh;
@@ -133,8 +134,8 @@ export default function App() {
 
         if (section === "bathroom") {
             if (hasSanitary) {
-                const sanitaryLow = (quality === "premium" ? 3500 : 2200) * qf;
-                const sanitaryHigh = (quality === "premium" ? 7000 : 4500) * qf;
+                const sanitaryLow = quality === "premium" ? 3500 : 2200;
+                const sanitaryHigh = quality === "premium" ? 7000 : 4500;
 
                 low += sanitaryLow;
                 high += sanitaryHigh;
@@ -147,8 +148,8 @@ export default function App() {
             }
 
             if (hasTiles) {
-                const tilesLow = area * (quality === "premium" ? 90 : 55) * qf;
-                const tilesHigh = area * (quality === "premium" ? 160 : 110) * qf;
+                const tilesLow = area * (quality === "premium" ? 90 : 55);
+                const tilesHigh = area * (quality === "premium" ? 160 : 110);
 
                 low += tilesLow;
                 high += tilesHigh;
@@ -189,8 +190,8 @@ export default function App() {
             }
 
             if (hasBathroomInstallations) {
-                const bathInstLow = (quality === "premium" ? 1800 : 1200) * qf;
-                const bathInstHigh = (quality === "premium" ? 4000 : 2800) * qf;
+                const bathInstLow = quality === "premium" ? 1800 : 1200;
+                const bathInstHigh = quality === "premium" ? 4000 : 2800;
 
                 low += bathInstLow;
                 high += bathInstHigh;
@@ -206,16 +207,24 @@ export default function App() {
         const avg = (low + high) / 2;
 
         let comparisonMessage = "";
+        let status = "";
 
         if (quote > 0 && avg > 0) {
             const percentage = Math.round(((quote - avg) / avg) * 100);
 
             if (quote < low) {
-                comparisonMessage = `Η προσφορά είναι ${Math.abs(percentage)}% κάτω από τον μέσο όρο`;
+                comparisonMessage = `Η προσφορά είναι ${Math.abs(
+                    percentage
+                )}% κάτω από τον μέσο όρο`;
+                status = "cheap";
             } else if (quote > high) {
-                comparisonMessage = `Η προσφορά είναι ${Math.abs(percentage)}% πάνω από τον μέσο όρο`;
+                comparisonMessage = `Η προσφορά είναι ${Math.abs(
+                    percentage
+                )}% πάνω από τον μέσο όρο`;
+                status = "expensive";
             } else {
                 comparisonMessage = `Η προσφορά είναι κοντά στον μέσο όρο (${percentage}%)`;
+                status = "normal";
             }
         }
 
@@ -228,12 +237,17 @@ export default function App() {
             breakdown,
             quote: quote > 0 ? quote : null,
             comparisonMessage,
+            status,
         });
     }
 
     return (
         <div className="container">
             <h1>Cost Check</h1>
+            <p>
+                Υπολόγισε ενδεικτικό κόστος ανακαίνισης για κουζίνα ή μπάνιο και
+                σύγκρινε την προσφορά που πήρες.
+            </p>
 
             <div className="card">
                 <label>Ενότητα</label>
@@ -247,6 +261,7 @@ export default function App() {
                     type="number"
                     value={sqm}
                     onChange={(e) => setSqm(e.target.value)}
+                    placeholder="π.χ. 12"
                 />
 
                 <label>Ποιότητα</label>
@@ -263,6 +278,7 @@ export default function App() {
                     />
                     Βασικές εργασίες
                 </label>
+
                 {section === "kitchen" && (
                     <>
                         <label>
@@ -361,6 +377,14 @@ export default function App() {
                     </>
                 )}
 
+                <label>Προσφορά εργολάβου (€) - προαιρετικά</label>
+                <input
+                    type="number"
+                    value={userQuote}
+                    onChange={(e) => setUserQuote(e.target.value)}
+                    placeholder="π.χ. 8500"
+                />
+
                 <button onClick={calculateEstimate}>Υπολογισμός</button>
             </div>
 
@@ -373,14 +397,51 @@ export default function App() {
                         {result.high.toLocaleString("el-GR")} €
                     </p>
 
+                    <p>Μέσο κόστος: {result.avg.toLocaleString("el-GR")} €</p>
+
+                    <p>
+                        €/m²: {result.avgPerSqmLow} - {result.avgPerSqmHigh}
+                    </p>
+
+                    {result.quote && (
+                        <>
+                            <p
+                                style={{
+                                    marginTop: "16px",
+                                    fontWeight: "bold",
+                                    color:
+                                        result.status === "cheap"
+                                            ? "green"
+                                            : result.status === "expensive"
+                                                ? "red"
+                                                : "orange",
+                                }}
+                            >
+                                {result.status === "cheap" && "🟢 Πιθανόν χαμηλή τιμή"}
+                                {result.status === "normal" && "🟠 Λογική τιμή"}
+                                {result.status === "expensive" && "🔴 Πιθανόν ακριβή"}
+                            </p>
+
+                            <p style={{ fontWeight: "bold" }}>
+                                Προσφορά: {result.quote.toLocaleString("el-GR")} € →{" "}
+                                {result.comparisonMessage}
+                            </p>
+                        </>
+                    )}
+
+                    <h3>Ανάλυση</h3>
                     <ul>
                         {result.breakdown.map((item, i) => (
                             <li key={i}>
-                                {item.label}: {Math.round(item.low)}€ -{" "}
-                                {Math.round(item.high)}€
+                                {item.label}: {Math.round(item.low)}€ - {Math.round(item.high)}€
                             </li>
                         ))}
                     </ul>
+
+                    <p className="note">
+                        ⚠️ Δεν περιλαμβάνονται συσκευές, άδειες, μηχανικός, στατικές
+                        παρεμβάσεις και απρόβλεπτες ζημιές.
+                    </p>
                 </div>
             )}
         </div>
