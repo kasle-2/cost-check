@@ -5,10 +5,10 @@ import { costData } from "./costData";
 export default function App() {
     const [section, setSection] = useState("kitchen");
     const [sqm, setSqm] = useState("");
-    const [propertyType, setPropertyType] = useState("apartment");
-    const [renovationType, setRenovationType] = useState("partial");
     const [quality, setQuality] = useState("standard");
-    const [region, setRegion] = useState("athens");
+
+    // Κοινές βασικές εργασίες
+    const [hasBaseWorks, setHasBaseWorks] = useState(true);
 
     // Kitchen
     const [hasCabinets, setHasCabinets] = useState(true);
@@ -40,26 +40,32 @@ export default function App() {
             return;
         }
 
-        const base = costData.renovationBase[renovationType];
-        const qf = costData.qualityFactor[quality];
+        const qf = costData.qualityFactor[quality] || 1;
 
-        let low = area * base.low * qf;
-        let high = area * base.high * qf;
+        let low = 0;
+        let high = 0;
+        const breakdown = [];
 
-        const breakdown = [
-            {
+        if (hasBaseWorks) {
+            const baseLow = area * 80 * qf;
+            const baseHigh = area * 180 * qf;
+
+            low += baseLow;
+            high += baseHigh;
+
+            breakdown.push({
                 label: "Βασικές εργασίες",
-                low,
-                high,
-            },
-        ];
+                low: baseLow,
+                high: baseHigh,
+            });
+        }
 
         if (section === "kitchen") {
             if (hasCabinets) {
                 const cabinetsLow =
-                    quality === "premium" ? 7000 : quality === "basic" ? 3000 : 5000;
+                    (quality === "premium" ? 7000 : quality === "basic" ? 3000 : 5000) * qf;
                 const cabinetsHigh =
-                    quality === "premium" ? 14000 : quality === "basic" ? 6000 : 9000;
+                    (quality === "premium" ? 14000 : quality === "basic" ? 6000 : 9000) * qf;
 
                 low += cabinetsLow;
                 high += cabinetsHigh;
@@ -73,9 +79,9 @@ export default function App() {
 
             if (hasCountertop) {
                 const countertopLow =
-                    quality === "premium" ? 5000 : quality === "basic" ? 2500 : 3500;
+                    (quality === "premium" ? 5000 : quality === "basic" ? 2500 : 3500) * qf;
                 const countertopHigh =
-                    quality === "premium" ? 10000 : quality === "basic" ? 5000 : 7000;
+                    (quality === "premium" ? 10000 : quality === "basic" ? 5000 : 7000) * qf;
 
                 low += countertopLow;
                 high += countertopHigh;
@@ -88,8 +94,8 @@ export default function App() {
             }
 
             if (hasPainting) {
-                const paintLow = area * 10;
-                const paintHigh = area * 20;
+                const paintLow = area * 10 * qf;
+                const paintHigh = area * 20 * qf;
 
                 low += paintLow;
                 high += paintHigh;
@@ -102,8 +108,8 @@ export default function App() {
             }
 
             if (hasFloor) {
-                const floorLow = area * 30;
-                const floorHigh = area * 80;
+                const floorLow = area * 30 * qf;
+                const floorHigh = area * 80 * qf;
 
                 low += floorLow;
                 high += floorHigh;
@@ -116,8 +122,10 @@ export default function App() {
             }
 
             if (hasInstallations) {
-                const instLow = 800;
-                const instHigh = 2500;
+                const instLow =
+                    (quality === "premium" ? 1500 : quality === "basic" ? 800 : 1200) * qf;
+                const instHigh =
+                    (quality === "premium" ? 3500 : quality === "basic" ? 2000 : 2500) * qf;
 
                 low += instLow;
                 high += instHigh;
@@ -133,9 +141,9 @@ export default function App() {
         if (section === "bathroom") {
             if (hasSanitary) {
                 const sanitaryLow =
-                    quality === "premium" ? 3500 : quality === "basic" ? 1200 : 2200;
+                    (quality === "premium" ? 3500 : quality === "basic" ? 1200 : 2200) * qf;
                 const sanitaryHigh =
-                    quality === "premium" ? 7000 : quality === "basic" ? 2500 : 4500;
+                    (quality === "premium" ? 7000 : quality === "basic" ? 2500 : 4500) * qf;
 
                 low += sanitaryLow;
                 high += sanitaryHigh;
@@ -148,8 +156,10 @@ export default function App() {
             }
 
             if (hasTiles) {
-                const tilesLow = area * (quality === "premium" ? 90 : quality === "basic" ? 35 : 55);
-                const tilesHigh = area * (quality === "premium" ? 160 : quality === "basic" ? 70 : 110);
+                const tilesLow =
+                    area * (quality === "premium" ? 90 : quality === "basic" ? 35 : 55) * qf;
+                const tilesHigh =
+                    area * (quality === "premium" ? 160 : quality === "basic" ? 70 : 110) * qf;
 
                 low += tilesLow;
                 high += tilesHigh;
@@ -162,8 +172,8 @@ export default function App() {
             }
 
             if (hasBathroomPainting) {
-                const bathPaintLow = area * 12;
-                const bathPaintHigh = area * 25;
+                const bathPaintLow = area * 12 * qf;
+                const bathPaintHigh = area * 25 * qf;
 
                 low += bathPaintLow;
                 high += bathPaintHigh;
@@ -176,8 +186,8 @@ export default function App() {
             }
 
             if (hasBathroomFloor) {
-                const bathFloorLow = area * 35;
-                const bathFloorHigh = area * 90;
+                const bathFloorLow = area * 35 * qf;
+                const bathFloorHigh = area * 90 * qf;
 
                 low += bathFloorLow;
                 high += bathFloorHigh;
@@ -191,9 +201,9 @@ export default function App() {
 
             if (hasBathroomInstallations) {
                 const bathInstLow =
-                    quality === "premium" ? 1800 : quality === "basic" ? 700 : 1200;
+                    (quality === "premium" ? 1800 : quality === "basic" ? 700 : 1200) * qf;
                 const bathInstHigh =
-                    quality === "premium" ? 4000 : quality === "basic" ? 1800 : 2800;
+                    (quality === "premium" ? 4000 : quality === "basic" ? 1800 : 2800) * qf;
 
                 low += bathInstLow;
                 high += bathInstHigh;
@@ -211,7 +221,7 @@ export default function App() {
         let comparisonMessage = "";
         let percentage = 0;
 
-        if (quote > 0) {
+        if (quote > 0 && avg > 0) {
             percentage = Math.round(((quote - avg) / avg) * 100);
 
             if (quote < low) {
@@ -267,22 +277,21 @@ export default function App() {
                     onChange={(e) => setSqm(e.target.value)}
                 />
 
-                <label>Είδος ανακαίνισης</label>
-                <select
-                    value={renovationType}
-                    onChange={(e) => setRenovationType(e.target.value)}
-                >
-                    <option value="light">Ελαφριά</option>
-                    <option value="partial">Μερική</option>
-                    <option value="full">Πλήρης</option>
-                </select>
-
                 <label>Ποιότητα</label>
                 <select value={quality} onChange={(e) => setQuality(e.target.value)}>
                     <option value="basic">Basic</option>
                     <option value="standard">Standard</option>
                     <option value="premium">Premium</option>
                 </select>
+
+                <label>
+                    <input
+                        type="checkbox"
+                        checked={hasBaseWorks}
+                        onChange={(e) => setHasBaseWorks(e.target.checked)}
+                    />
+                    Βασικές εργασίες
+                </label>
 
                 {section === "kitchen" && (
                     <>
