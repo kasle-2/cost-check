@@ -45,13 +45,38 @@ export default function App() {
         setResult(estimate);
     }
 
+    function getStatusStyles(status) {
+        if (status === "cheap") {
+            return {
+                background: "#dcfce7",
+                color: "#166534",
+                text: "🟢 Χαμηλή τιμή",
+            };
+        }
+
+        if (status === "expensive") {
+            return {
+                background: "#fee2e2",
+                color: "#991b1b",
+                text: "🔴 Ακριβή τιμή",
+            };
+        }
+
+        return {
+            background: "#fef3c7",
+            color: "#92400e",
+            text: "🟠 Λογική τιμή",
+        };
+    }
+
+    const statusBox = getStatusStyles(result?.status);
+
     return (
         <div className="container">
             <h1>Cost Check</h1>
 
             <p className="intro-text">
-                Υπολόγισε ενδεικτικό κόστος ανακαίνισης για κουζίνα ή μπάνιο και
-                σύγκρινε την προσφορά που πήρες.
+                Δες σε 30'' αν η προσφορά που πήρες είναι λογική ή ακριβή.
             </p>
 
             <div className="card">
@@ -220,42 +245,53 @@ export default function App() {
                 <div className="result-card">
                     <h2>💰 Εκτιμώμενο κόστος</h2>
 
-                    <p className="price">
-                        {result.low.toLocaleString("el-GR")} € —{" "}
+                    <p
+                        style={{
+                            fontSize: "18px",
+                            fontWeight: "bold",
+                            marginBottom: "8px",
+                            color: "#111827",
+                        }}
+                    >
+                        Εκτίμηση αγοράς: {result.low.toLocaleString("el-GR")} € -{" "}
                         {result.high.toLocaleString("el-GR")} €
                     </p>
 
-                    <p>Μέσο κόστος: {result.avg.toLocaleString("el-GR")} €</p>
+                    <p
+                        style={{
+                            color: "#6b7280",
+                            marginTop: "0",
+                            marginBottom: "16px",
+                        }}
+                    >
+                        Συνήθης τιμή: περίπου {result.avg.toLocaleString("el-GR")} €
+                    </p>
 
                     <p>Εκτιμώμενη διάρκεια: {result.duration}</p>
 
                     {result.quote && (
                         <>
-                            <p
+                            <div
                                 style={{
                                     marginTop: "16px",
+                                    padding: "12px",
+                                    borderRadius: "10px",
                                     fontWeight: "bold",
-                                    color:
-                                        result.status === "cheap"
-                                            ? "green"
-                                            : result.status === "expensive"
-                                                ? "red"
-                                                : "orange",
+                                    background: statusBox.background,
+                                    color: statusBox.color,
                                 }}
                             >
-                                {result.status === "cheap" && "🟢 Πιθανόν χαμηλή τιμή"}
-                                {result.status === "normal" && "🟠 Λογική τιμή"}
-                                {result.status === "expensive" && "🔴 Πιθανόν ακριβή"}
-                            </p>
+                                {statusBox.text}
+                            </div>
 
-                            <p style={{ fontWeight: "bold" }}>
+                            <p style={{ fontWeight: "bold", marginTop: "12px" }}>
                                 Προσφορά: {result.quote.toLocaleString("el-GR")} € →{" "}
                                 {result.comparisonMessage}
                             </p>
                         </>
                     )}
 
-                    <h3>Ανάλυση</h3>
+                    <h3>Ανάλυση κόστους</h3>
                     <ul>
                         {result.breakdown.map((item, i) => (
                             <li key={i}>
@@ -266,7 +302,12 @@ export default function App() {
                     </ul>
 
                     <p className="note">
-                        ⚠️ Δεν περιλαμβάνονται συσκευές, άδειες, μηχανικός, στατικές
+                        ⚠️ Οι τιμές είναι ενδεικτικές και βασίζονται σε μέσες τιμές
+                        αγοράς. Δεν αποτελούν δεσμευτική προσφορά.
+                    </p>
+
+                    <p className="note">
+                        Δεν περιλαμβάνονται συσκευές, άδειες, μηχανικός, στατικές
                         παρεμβάσεις και απρόβλεπτες ζημιές.
                     </p>
                 </div>
