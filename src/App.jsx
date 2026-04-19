@@ -3,48 +3,39 @@ import "./App.css";
 import { calculateEstimateResult } from "./estimate";
 
 export default function App() {
-    const [section, setSection] = useState("kitchen");
-    const [sqm, setSqm] = useState("");
-    const [quality, setQuality] = useState("standard");
-    const [region, setRegion] = useState("athens");
+    const [form, setForm] = useState({
+        section: "kitchen",
+        sqm: "",
+        quality: "standard",
+        region: "athens",
 
-    // Κοινό
-    const [hasPrep, setHasPrep] = useState(true);
+        hasPrep: true,
 
-    // Kitchen
-    const [hasCabinets, setHasCabinets] = useState(true);
-    const [hasCountertop, setHasCountertop] = useState(true);
-    const [hasPainting, setHasPainting] = useState(false);
-    const [hasFloor, setHasFloor] = useState(false);
-    const [hasInstallations, setHasInstallations] = useState(false);
+        hasCabinets: true,
+        hasCountertop: true,
+        hasPainting: false,
+        hasFloor: false,
+        hasInstallations: false,
 
-    // Bathroom
-    const [hasSanitary, setHasSanitary] = useState(true);
-    const [hasTiles, setHasTiles] = useState(true);
-    const [hasBathroomPainting, setHasBathroomPainting] = useState(false);
-    const [hasBathroomInstallations, setHasBathroomInstallations] = useState(false);
+        hasSanitary: true,
+        hasTiles: true,
+        hasBathroomPainting: false,
+        hasBathroomInstallations: false,
 
-    const [userQuote, setUserQuote] = useState("");
+        userQuote: "",
+    });
+
     const [result, setResult] = useState(null);
 
+    function updateField(name, value) {
+        setForm((prev) => ({
+            ...prev,
+            [name]: value,
+        }));
+    }
+
     function calculateEstimate() {
-        const estimate = calculateEstimateResult({
-            section,
-            sqm,
-            quality,
-            region,
-            hasPrep,
-            hasCabinets,
-            hasCountertop,
-            hasPainting,
-            hasFloor,
-            hasInstallations,
-            hasSanitary,
-            hasTiles,
-            hasBathroomPainting,
-            hasBathroomInstallations,
-            userQuote,
-        });
+        const estimate = calculateEstimateResult(form);
 
         if (estimate.error) {
             alert(estimate.error);
@@ -65,7 +56,10 @@ export default function App() {
 
             <div className="card">
                 <label className="field-label">Χώρος</label>
-                <select value={section} onChange={(e) => setSection(e.target.value)}>
+                <select
+                    value={form.section}
+                    onChange={(e) => updateField("section", e.target.value)}
+                >
                     <option value="kitchen">Κουζίνα</option>
                     <option value="bathroom">Μπάνιο</option>
                 </select>
@@ -73,19 +67,25 @@ export default function App() {
                 <label className="field-label">Τετραγωνικά (m²)</label>
                 <input
                     type="number"
-                    value={sqm}
-                    onChange={(e) => setSqm(e.target.value)}
+                    value={form.sqm}
+                    onChange={(e) => updateField("sqm", e.target.value)}
                     placeholder="π.χ. 12"
                 />
 
                 <label className="field-label">Ποιότητα</label>
-                <select value={quality} onChange={(e) => setQuality(e.target.value)}>
+                <select
+                    value={form.quality}
+                    onChange={(e) => updateField("quality", e.target.value)}
+                >
                     <option value="standard">Standard</option>
                     <option value="premium">Premium</option>
                 </select>
 
                 <label className="field-label">Περιοχή</label>
-                <select value={region} onChange={(e) => setRegion(e.target.value)}>
+                <select
+                    value={form.region}
+                    onChange={(e) => updateField("region", e.target.value)}
+                >
                     <option value="athens">Αθήνα</option>
                     <option value="thessaloniki">Θεσσαλονίκη</option>
                     <option value="other">Υπόλοιπη Ελλάδα</option>
@@ -96,19 +96,19 @@ export default function App() {
                         <span>Αποξήλωση & προετοιμασία</span>
                         <input
                             type="checkbox"
-                            checked={hasPrep}
-                            onChange={(e) => setHasPrep(e.target.checked)}
+                            checked={form.hasPrep}
+                            onChange={(e) => updateField("hasPrep", e.target.checked)}
                         />
                     </label>
 
-                    {section === "kitchen" && (
+                    {form.section === "kitchen" && (
                         <>
                             <label className="checkbox-row">
                                 <span>Νέα ντουλάπια</span>
                                 <input
                                     type="checkbox"
-                                    checked={hasCabinets}
-                                    onChange={(e) => setHasCabinets(e.target.checked)}
+                                    checked={form.hasCabinets}
+                                    onChange={(e) => updateField("hasCabinets", e.target.checked)}
                                 />
                             </label>
 
@@ -116,8 +116,10 @@ export default function App() {
                                 <span>Νέος πάγκος</span>
                                 <input
                                     type="checkbox"
-                                    checked={hasCountertop}
-                                    onChange={(e) => setHasCountertop(e.target.checked)}
+                                    checked={form.hasCountertop}
+                                    onChange={(e) =>
+                                        updateField("hasCountertop", e.target.checked)
+                                    }
                                 />
                             </label>
 
@@ -125,8 +127,8 @@ export default function App() {
                                 <span>Βάψιμο</span>
                                 <input
                                     type="checkbox"
-                                    checked={hasPainting}
-                                    onChange={(e) => setHasPainting(e.target.checked)}
+                                    checked={form.hasPainting}
+                                    onChange={(e) => updateField("hasPainting", e.target.checked)}
                                 />
                             </label>
 
@@ -134,8 +136,8 @@ export default function App() {
                                 <span>Νέο δάπεδο</span>
                                 <input
                                     type="checkbox"
-                                    checked={hasFloor}
-                                    onChange={(e) => setHasFloor(e.target.checked)}
+                                    checked={form.hasFloor}
+                                    onChange={(e) => updateField("hasFloor", e.target.checked)}
                                 />
                             </label>
 
@@ -143,21 +145,23 @@ export default function App() {
                                 <span>Υδραυλικά & ηλεκτρολογικά</span>
                                 <input
                                     type="checkbox"
-                                    checked={hasInstallations}
-                                    onChange={(e) => setHasInstallations(e.target.checked)}
+                                    checked={form.hasInstallations}
+                                    onChange={(e) =>
+                                        updateField("hasInstallations", e.target.checked)
+                                    }
                                 />
                             </label>
                         </>
                     )}
 
-                    {section === "bathroom" && (
+                    {form.section === "bathroom" && (
                         <>
                             <label className="checkbox-row">
                                 <span>Νέα είδη υγιεινής</span>
                                 <input
                                     type="checkbox"
-                                    checked={hasSanitary}
-                                    onChange={(e) => setHasSanitary(e.target.checked)}
+                                    checked={form.hasSanitary}
+                                    onChange={(e) => updateField("hasSanitary", e.target.checked)}
                                 />
                             </label>
 
@@ -165,8 +169,8 @@ export default function App() {
                                 <span>Νέα πλακάκια (τοίχος + δάπεδο)</span>
                                 <input
                                     type="checkbox"
-                                    checked={hasTiles}
-                                    onChange={(e) => setHasTiles(e.target.checked)}
+                                    checked={form.hasTiles}
+                                    onChange={(e) => updateField("hasTiles", e.target.checked)}
                                 />
                             </label>
 
@@ -174,8 +178,10 @@ export default function App() {
                                 <span>Βάψιμο</span>
                                 <input
                                     type="checkbox"
-                                    checked={hasBathroomPainting}
-                                    onChange={(e) => setHasBathroomPainting(e.target.checked)}
+                                    checked={form.hasBathroomPainting}
+                                    onChange={(e) =>
+                                        updateField("hasBathroomPainting", e.target.checked)
+                                    }
                                 />
                             </label>
 
@@ -183,9 +189,9 @@ export default function App() {
                                 <span>Υδραυλικά & ηλεκτρολογικά</span>
                                 <input
                                     type="checkbox"
-                                    checked={hasBathroomInstallations}
+                                    checked={form.hasBathroomInstallations}
                                     onChange={(e) =>
-                                        setHasBathroomInstallations(e.target.checked)
+                                        updateField("hasBathroomInstallations", e.target.checked)
                                     }
                                 />
                             </label>
@@ -198,8 +204,8 @@ export default function App() {
                 </label>
                 <input
                     type="number"
-                    value={userQuote}
-                    onChange={(e) => setUserQuote(e.target.value)}
+                    value={form.userQuote}
+                    onChange={(e) => updateField("userQuote", e.target.value)}
                     placeholder="π.χ. 8500"
                 />
 
