@@ -1,8 +1,12 @@
 body {
   margin: 0;
   font-family: Arial, sans-serif;
-  background: #f3f4f6;
+  background: #f8fafc;
   color: #24324a;
+}
+
+* {
+  box-sizing: border-box;
 }
 
 .container {
@@ -27,6 +31,7 @@ body {
 .card,
 .result-card {
   background: #ffffff;
+  border: 1px solid #e5e7eb;
   border-radius: 18px;
   padding: 24px;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
@@ -50,6 +55,33 @@ body {
   font-size: 16px;
   box-sizing: border-box;
   background: #fff;
+  color: #111827;
+  -webkit-text-fill-color: #111827;
+  opacity: 1;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.card input[type="number"]::placeholder {
+  color: #9ca3af;
+  opacity: 1;
+}
+
+.card select:focus,
+.card input[type="number"]:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
+  background: #fff;
+  color: #111827;
+  -webkit-text-fill-color: #111827;
+}
+
+.card input[type="number"]:-webkit-autofill,
+.card input[type="number"]:-webkit-autofill:hover,
+.card input[type="number"]:-webkit-autofill:focus {
+  -webkit-text-fill-color: #111827;
+  transition: background-color 9999s ease-out 0s;
 }
 
 .options-group {
@@ -67,7 +99,6 @@ body {
   font-weight: 700;
   color: #4b5563;
   cursor: pointer;
-  box-sizing: border-box;
 }
 
 .checkbox-row:last-child {
@@ -98,10 +129,15 @@ body {
   font-size: 16px;
   font-weight: 700;
   cursor: pointer;
+  transition: background 0.2s ease, transform 0.1s ease;
 }
 
 .card button:hover {
   background: #1d4ed8;
+}
+
+.card button:active {
+  transform: translateY(1px);
 }
 
 .small-note {
@@ -149,4 +185,35 @@ body {
   color: #6b7280;
   margin-top: 18px;
   line-height: 1.5;
+}
+
+@media (max-width: 640px) {
+  .container {
+    margin: 20px auto;
+    padding: 16px;
+  }
+
+  .card,
+  .result-card {
+    padding: 18px;
+    border-radius: 14px;
+  }
+
+  .checkbox-row {
+    align-items: flex-start;
+    padding: 12px 0;
+  }
+
+  .checkbox-row span {
+    font-size: 15px;
+    line-height: 1.4;
+  }
+
+  .price {
+    font-size: 24px;
+  }
+
+  .result-card h2 {
+    font-size: 22px;
+  }
 }
