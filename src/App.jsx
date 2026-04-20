@@ -83,6 +83,48 @@ export default function App() {
         setResult(estimate);
     }
 
+    function copyResults() {
+        if (!result) return;
+
+        const quotesText =
+            result.quoteComparisons?.length > 0
+                ? result.quoteComparisons
+                    .map(
+                        (item) =>
+                            `Προσφορά ${item.index}: ${item.quote.toLocaleString(
+                                "el-GR"
+                            )}€ - ${item.comparisonMessage}`
+                    )
+                    .join("\n")
+                : "Δεν έχουν δοθεί προσφορές.";
+
+        const text = `
+Εκτίμηση ανακαίνισης
+
+Χώρος: ${form.section === "kitchen" ? "Κουζίνα" : "Μπάνιο"}
+Τετραγωνικά: ${form.sqm} m²
+Περιοχή: ${
+            form.region === "athens"
+                ? "Αθήνα"
+                : form.region === "thessaloniki"
+                    ? "Θεσσαλονίκη"
+                    : "Υπόλοιπη Ελλάδα"
+        }
+
+Εκτιμώμενο εύρος: ${result.low.toLocaleString("el-GR")}€ - ${result.high.toLocaleString("el-GR")}€
+Μέσο κόστος: ${result.avg.toLocaleString("el-GR")}€
+Διάρκεια: ${result.duration}
+
+Σύγκριση προσφορών:
+${quotesText}
+
+${result.bestQuoteMessage || ""}
+        `.trim();
+
+        navigator.clipboard.writeText(text);
+        alert("Αντιγράφηκε στο clipboard!");
+    }
+
     function getStatusStyles(status) {
         if (status === "cheap") {
             return {
@@ -390,6 +432,21 @@ export default function App() {
 
             {result && (
                 <div className="result-card">
+                    {result.warning && (
+                        <div
+                            style={{
+                                background: "#fef3c7",
+                                color: "#92400e",
+                                padding: "10px",
+                                borderRadius: "8px",
+                                marginBottom: "12px",
+                                fontWeight: "bold",
+                            }}
+                        >
+                            ⚠️ {result.warning}
+                        </div>
+                    )}
+
                     <h2>💰 Εκτιμώμενο κόστος</h2>
 
                     <p className="price">
@@ -399,6 +456,33 @@ export default function App() {
 
                     <p>Μέσο κόστος: {result.avg.toLocaleString("el-GR")} €</p>
                     <p>Εκτιμώμενη διάρκεια: {result.duration}</p>
+
+                    <h3>Γιατί βγήκε αυτή η τιμή</h3>
+                    <ul>
+                        {form.hasCabinets && (
+                            <li>Τα ντουλάπια επηρεάζουν σημαντικά το συνολικό κόστος.</li>
+                        )}
+                        {form.hasCountertop && (
+                            <li>Ο πάγκος είναι βασικός παράγοντας κόστους.</li>
+                        )}
+                        {form.hasFloor && (
+                            <li>Το δάπεδο αυξάνει το συνολικό budget.</li>
+                        )}
+                        {form.hasInstallations && form.section === "kitchen" && (
+                            <li>Τα υδραυλικά και ηλεκτρολογικά ανεβάζουν το έργο.</li>
+                        )}
+                        {form.hasSanitary && form.section === "bathroom" && (
+                            <li>Τα είδη υγιεινής επηρεάζουν έντονα το τελικό εύρος.</li>
+                        )}
+                        {form.hasBathroomInstallations &&
+                            form.section === "bathroom" && (
+                                <li>
+                                    Οι παρεμβάσεις σε υδραυλικά και ηλεκτρολογικά αυξάνουν
+                                    το κόστος.
+                                </li>
+                            )}
+                        <li>Η περιοχή του έργου επηρεάζει τις τιμές αγοράς και εργασίας.</li>
+                    </ul>
 
                     {result.quoteComparisons?.length > 0 && (
                         <>
@@ -447,6 +531,10 @@ export default function App() {
                             </li>
                         ))}
                     </ul>
+
+                    <button onClick={copyResults} style={{ marginTop: "15px" }}>
+                        📋 Αντιγραφή αποτελέσματος
+                    </button>
 
                     <p className="note">
                         ⚠️ Οι τιμές είναι ενδεικτικές και βασίζονται σε μέσες τιμές

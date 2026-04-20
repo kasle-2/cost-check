@@ -39,6 +39,35 @@ export function calculateEstimateResult({
         };
     }
 
+    const hasAnyWork =
+        hasPrep ||
+        hasCabinets ||
+        hasCountertop ||
+        hasPainting ||
+        hasFloor ||
+        hasInstallations ||
+        hasSanitary ||
+        hasBathroomPainting ||
+        hasBathroomInstallations;
+
+    if (!hasAnyWork) {
+        return {
+            error: "Επίλεξε τουλάχιστον μία εργασία για να γίνει εκτίμηση.",
+        };
+    }
+
+    let warning = "";
+
+    if (section === "bathroom" && area > 20) {
+        warning =
+            "Πολύ μεγάλο μπάνιο — μήπως έχεις βάλει λάθος τετραγωνικά;";
+    }
+
+    if (section === "kitchen" && area > 40) {
+        warning =
+            "Πολύ μεγάλη κουζίνα — έλεγξε τα τετραγωνικά.";
+    }
+
     const rf = costData.regionFactor?.[region] || 1;
 
     let low = 0;
@@ -214,6 +243,10 @@ export function calculateEstimateResult({
         if (hasCabinets && hasCountertop && hasFloor) {
             daysHigh = 20;
         }
+
+        if (hasInstallations) {
+            daysHigh += 2;
+        }
     }
 
     if (section === "bathroom") {
@@ -239,10 +272,15 @@ export function calculateEstimateResult({
     }));
 
     function parseQuote(value) {
-        if (value === "" || value === null || value === undefined) return null;
+        if (value === "" || value === null || value === undefined) {
+            return null;
+        }
 
         const parsed = Number(value);
-        if (!Number.isFinite(parsed) || parsed <= 0) return null;
+
+        if (!Number.isFinite(parsed) || parsed <= 0) {
+            return null;
+        }
 
         return parsed;
     }
@@ -327,5 +365,6 @@ export function calculateEstimateResult({
         quoteComparisons,
         bestQuoteMessage,
         duration: `${daysLow} - ${daysHigh} ημέρες`,
+        warning,
     };
 }
