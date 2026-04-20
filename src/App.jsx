@@ -58,7 +58,9 @@ export default function App() {
         hasBathroomPainting: false,
         hasBathroomInstallations: false,
 
-        userQuote: "",
+        quote1: "",
+        quote2: "",
+        quote3: "",
     });
 
     const [result, setResult] = useState(null);
@@ -104,8 +106,6 @@ export default function App() {
             text: "🟠 Λογική τιμή",
         };
     }
-
-    const statusBox = getStatusStyles(result?.status);
 
     return (
         <div className="container">
@@ -160,7 +160,9 @@ export default function App() {
                                 <input
                                     type="checkbox"
                                     checked={form.hasCabinets}
-                                    onChange={(e) => updateField("hasCabinets", e.target.checked)}
+                                    onChange={(e) =>
+                                        updateField("hasCabinets", e.target.checked)
+                                    }
                                 />
                             </label>
 
@@ -213,7 +215,9 @@ export default function App() {
                                 <input
                                     type="checkbox"
                                     checked={form.hasPainting}
-                                    onChange={(e) => updateField("hasPainting", e.target.checked)}
+                                    onChange={(e) =>
+                                        updateField("hasPainting", e.target.checked)
+                                    }
                                 />
                             </label>
 
@@ -263,14 +267,16 @@ export default function App() {
                                 <input
                                     type="checkbox"
                                     checked={form.hasSanitary}
-                                    onChange={(e) => updateField("hasSanitary", e.target.checked)}
+                                    onChange={(e) =>
+                                        updateField("hasSanitary", e.target.checked)
+                                    }
                                 />
                             </label>
 
                             {form.hasSanitary && (
                                 <>
                                     <label className="field-label">
-                                        Κατηγορία ειδών υγιεινής
+                                        Ποιότητα ειδών υγιεινής
                                     </label>
                                     <select
                                         value={form.sanitaryQuality}
@@ -278,7 +284,6 @@ export default function App() {
                                             updateField("sanitaryQuality", e.target.value)
                                         }
                                     >
-                                        <option value="basic">Basic</option>
                                         <option value="standard">Standard</option>
                                         <option value="premium">Premium</option>
                                     </select>
@@ -327,7 +332,10 @@ export default function App() {
                                     type="checkbox"
                                     checked={form.hasBathroomPainting}
                                     onChange={(e) =>
-                                        updateField("hasBathroomPainting", e.target.checked)
+                                        updateField(
+                                            "hasBathroomPainting",
+                                            e.target.checked
+                                        )
                                     }
                                 />
                             </label>
@@ -349,14 +357,28 @@ export default function App() {
                     )}
                 </div>
 
-                <label className="field-label">
-                    Προσφορά εργολάβου (€) - προαιρετικά
-                </label>
+                <label className="field-label">Προσφορά 1 (€) - προαιρετικά</label>
                 <input
                     type="number"
-                    value={form.userQuote}
-                    onChange={(e) => updateField("userQuote", e.target.value)}
+                    value={form.quote1}
+                    onChange={(e) => updateField("quote1", e.target.value)}
                     placeholder="π.χ. 8500"
+                />
+
+                <label className="field-label">Προσφορά 2 (€) - προαιρετικά</label>
+                <input
+                    type="number"
+                    value={form.quote2}
+                    onChange={(e) => updateField("quote2", e.target.value)}
+                    placeholder="π.χ. 9200"
+                />
+
+                <label className="field-label">Προσφορά 3 (€) - προαιρετικά</label>
+                <input
+                    type="number"
+                    value={form.quote3}
+                    onChange={(e) => updateField("quote3", e.target.value)}
+                    placeholder="π.χ. 7800"
                 />
 
                 <button onClick={calculateEstimate}>Υπολογισμός</button>
@@ -376,28 +398,43 @@ export default function App() {
                     </p>
 
                     <p>Μέσο κόστος: {result.avg.toLocaleString("el-GR")} €</p>
-
                     <p>Εκτιμώμενη διάρκεια: {result.duration}</p>
 
-                    {result.quote !== null && (
+                    {result.quoteComparisons?.length > 0 && (
                         <>
-                            <div
-                                style={{
-                                    marginTop: "16px",
-                                    padding: "12px",
-                                    borderRadius: "10px",
-                                    fontWeight: "bold",
-                                    background: statusBox.background,
-                                    color: statusBox.color,
-                                }}
-                            >
-                                {statusBox.text}
-                            </div>
+                            <h3>Σύγκριση προσφορών</h3>
 
-                            <p style={{ fontWeight: "bold", marginTop: "12px" }}>
-                                Προσφορά: {result.quote.toLocaleString("el-GR")} € →{" "}
-                                {result.comparisonMessage}
-                            </p>
+                            {result.quoteComparisons.map((item, index) => {
+                                const styles = getStatusStyles(item.status);
+
+                                return (
+                                    <div
+                                        key={index}
+                                        style={{
+                                            marginTop: "12px",
+                                            padding: "12px",
+                                            borderRadius: "10px",
+                                            background: styles.background,
+                                            color: styles.color,
+                                        }}
+                                    >
+                                        <div style={{ fontWeight: "bold" }}>
+                                            Προσφορά {item.index}:{" "}
+                                            {item.quote.toLocaleString("el-GR")} €
+                                        </div>
+                                        <div>{styles.text}</div>
+                                        <div style={{ marginTop: "6px" }}>
+                                            {item.comparisonMessage}
+                                        </div>
+                                    </div>
+                                );
+                            })}
+
+                            {result.bestQuoteMessage && (
+                                <p style={{ fontWeight: "bold", marginTop: "14px" }}>
+                                    {result.bestQuoteMessage}
+                                </p>
+                            )}
                         </>
                     )}
 
@@ -412,8 +449,8 @@ export default function App() {
                     </ul>
 
                     <p className="note">
-                        ⚠️ Οι τιμές είναι ενδεικτικές και βασίζονται σε μέσες τιμές αγοράς.
-                        Δεν αποτελούν δεσμευτική προσφορά.
+                        ⚠️ Οι τιμές είναι ενδεικτικές και βασίζονται σε μέσες τιμές
+                        αγοράς. Δεν αποτελούν δεσμευτική προσφορά.
                     </p>
 
                     <p className="note">
