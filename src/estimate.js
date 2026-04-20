@@ -52,8 +52,8 @@ export function calculateEstimateResult({
 
     if (section === "kitchen") {
         if (hasCabinets) {
-            const cabinetsLow = quality === "premium" ? 7000 : 5000;
-            const cabinetsHigh = quality === "premium" ? 14000 : 9000;
+            const cabinetsLow = area * (quality === "premium" ? 500 : 300);
+            const cabinetsHigh = area * (quality === "premium" ? 900 : 600);
 
             low += cabinetsLow;
             high += cabinetsHigh;
@@ -66,8 +66,8 @@ export function calculateEstimateResult({
         }
 
         if (hasCountertop) {
-            const countertopLow = quality === "premium" ? 5000 : 3500;
-            const countertopHigh = quality === "premium" ? 10000 : 7000;
+            const countertopLow = area * (quality === "premium" ? 250 : 150);
+            const countertopHigh = area * (quality === "premium" ? 500 : 300);
 
             low += countertopLow;
             high += countertopHigh;
