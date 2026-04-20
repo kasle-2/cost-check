@@ -2,6 +2,34 @@ import { useState } from "react";
 import "./App.css";
 import { calculateEstimateResult } from "./estimate";
 
+function TermsSection() {
+    return (
+        <div className="terms-box">
+            <h3>Όροι χρήσης</h3>
+
+            <p>
+                Το εργαλείο παρέχει ενδεικτικές εκτιμήσεις κόστους ανακαίνισης
+                για ενημερωτικούς σκοπούς.
+            </p>
+
+            <p>
+                Οι υπολογισμοί βασίζονται σε γενικές παραδοχές και μέσες τιμές
+                αγοράς και δεν αποτελούν δεσμευτική οικονομική ή τεχνική προσφορά.
+            </p>
+
+            <p>
+                Η τελική τιμή εξαρτάται από το έργο, τα υλικά, την περιοχή και
+                τον ανάδοχο.
+            </p>
+
+            <p>
+                Το εργαλείο δεν αντικαθιστά επαγγελματική εκτίμηση μηχανικού ή
+                εργολάβου.
+            </p>
+        </div>
+    );
+}
+
 export default function App() {
     const [form, setForm] = useState({
         section: "kitchen",
@@ -15,10 +43,10 @@ export default function App() {
         hasCountertop: true,
         hasPainting: false,
         hasFloor: false,
+        floorMaterial: "tile",
         hasInstallations: false,
 
         hasSanitary: true,
-        hasTiles: true,
         hasBathroomPainting: false,
         hasBathroomInstallations: false,
 
@@ -67,34 +95,6 @@ export default function App() {
             color: "#92400e",
             text: "🟠 Λογική τιμή",
         };
-    }
-
-    function TermsSection() {
-        return (
-            <div className="terms-box">
-                <h3>Όροι χρήσης</h3>
-
-                <p>
-                    Το εργαλείο παρέχει ενδεικτικές εκτιμήσεις κόστους ανακαίνισης
-                    για ενημερωτικούς σκοπούς.
-                </p>
-
-                <p>
-                    Οι υπολογισμοί βασίζονται σε γενικές παραδοχές και μέσες τιμές
-                    αγοράς και δεν αποτελούν δεσμευτική οικονομική ή τεχνική προσφορά.
-                </p>
-
-                <p>
-                    Η τελική τιμή εξαρτάται από το έργο, τα υλικά, την περιοχή και
-                    τον ανάδοχο.
-                </p>
-
-                <p>
-                    Το εργαλείο δεν αντικαθιστά επαγγελματική εκτίμηση μηχανικού ή
-                    εργολάβου.
-                </p>
-            </div>
-        );
     }
 
     const statusBox = getStatusStyles(result?.status);
@@ -194,6 +194,23 @@ export default function App() {
                                 />
                             </label>
 
+                            {form.hasFloor && (
+                                <>
+                                    <label className="field-label">Υλικό δαπέδου</label>
+                                    <select
+                                        value={form.floorMaterial}
+                                        onChange={(e) =>
+                                            updateField("floorMaterial", e.target.value)
+                                        }
+                                    >
+                                        <option value="tile">Πλακάκι</option>
+                                        <option value="marble">Μάρμαρο</option>
+                                        <option value="wood">Ξύλο / Laminate</option>
+                                        <option value="vinyl">Βινυλικό</option>
+                                    </select>
+                                </>
+                            )}
+
                             <label className="checkbox-row">
                                 <span>Υδραυλικά & ηλεκτρολογικά</span>
                                 <input
@@ -219,13 +236,30 @@ export default function App() {
                             </label>
 
                             <label className="checkbox-row">
-                                <span>Νέα πλακάκια</span>
+                                <span>Νέο δάπεδο</span>
                                 <input
                                     type="checkbox"
-                                    checked={form.hasTiles}
-                                    onChange={(e) => updateField("hasTiles", e.target.checked)}
+                                    checked={form.hasFloor}
+                                    onChange={(e) => updateField("hasFloor", e.target.checked)}
                                 />
                             </label>
+
+                            {form.hasFloor && (
+                                <>
+                                    <label className="field-label">Υλικό δαπέδου</label>
+                                    <select
+                                        value={form.floorMaterial}
+                                        onChange={(e) =>
+                                            updateField("floorMaterial", e.target.value)
+                                        }
+                                    >
+                                        <option value="tile">Πλακάκι</option>
+                                        <option value="marble">Μάρμαρο</option>
+                                        <option value="wood">Ξύλο / Laminate</option>
+                                        <option value="vinyl">Βινυλικό</option>
+                                    </select>
+                                </>
+                            )}
 
                             <label className="checkbox-row">
                                 <span>Βάψιμο</span>
@@ -244,7 +278,10 @@ export default function App() {
                                     type="checkbox"
                                     checked={form.hasBathroomInstallations}
                                     onChange={(e) =>
-                                        updateField("hasBathroomInstallations", e.target.checked)
+                                        updateField(
+                                            "hasBathroomInstallations",
+                                            e.target.checked
+                                        )
                                     }
                                 />
                             </label>
@@ -282,7 +319,7 @@ export default function App() {
 
                     <p>Εκτιμώμενη διάρκεια: {result.duration}</p>
 
-                    {result.quote && (
+                    {result.quote !== null && (
                         <>
                             <div
                                 style={{

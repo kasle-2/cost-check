@@ -10,15 +10,15 @@ export function calculateEstimateResult({
                                             hasCountertop,
                                             hasPainting,
                                             hasFloor,
+                                            floorMaterial,
                                             hasInstallations,
                                             hasSanitary,
-                                            hasTiles,
                                             hasBathroomPainting,
                                             hasBathroomInstallations,
                                             userQuote,
                                         }) {
     const area = Number(sqm);
-    const quote = Number(userQuote);
+    const quote = userQuote === "" ? null : Number(userQuote);
 
     if (!area || area <= 0) {
         return {
@@ -36,18 +36,22 @@ export function calculateEstimateResult({
     let high = 0;
     const breakdown = [];
 
+    function addItem(label, itemLow, itemHigh) {
+        low += itemLow;
+        high += itemHigh;
+
+        breakdown.push({
+            label,
+            low: itemLow,
+            high: itemHigh,
+        });
+    }
+
     if (hasPrep) {
         const prepLow = area * 20 * qf;
         const prepHigh = area * 50 * qf;
 
-        low += prepLow;
-        high += prepHigh;
-
-        breakdown.push({
-            label: "Αποξήλωση & προετοιμασία",
-            low: prepLow,
-            high: prepHigh,
-        });
+        addItem("Αποξήλωση & προετοιμασία", prepLow, prepHigh);
     }
 
     if (section === "kitchen") {
@@ -55,70 +59,56 @@ export function calculateEstimateResult({
             const cabinetsLow = area * (quality === "premium" ? 500 : 300);
             const cabinetsHigh = area * (quality === "premium" ? 900 : 600);
 
-            low += cabinetsLow;
-            high += cabinetsHigh;
-
-            breakdown.push({
-                label: "Νέα ντουλάπια",
-                low: cabinetsLow,
-                high: cabinetsHigh,
-            });
+            addItem("Νέα ντουλάπια", cabinetsLow, cabinetsHigh);
         }
 
         if (hasCountertop) {
             const countertopLow = area * (quality === "premium" ? 250 : 150);
             const countertopHigh = area * (quality === "premium" ? 500 : 300);
 
-            low += countertopLow;
-            high += countertopHigh;
-
-            breakdown.push({
-                label: "Νέος πάγκος",
-                low: countertopLow,
-                high: countertopHigh,
-            });
+            addItem("Νέος πάγκος", countertopLow, countertopHigh);
         }
 
         if (hasPainting) {
             const paintLow = area * 10 * qf;
             const paintHigh = area * 20 * qf;
 
-            low += paintLow;
-            high += paintHigh;
-
-            breakdown.push({
-                label: "Βάψιμο",
-                low: paintLow,
-                high: paintHigh,
-            });
+            addItem("Βάψιμο", paintLow, paintHigh);
         }
 
         if (hasFloor) {
-            const floorLow = area * 30 * qf;
-            const floorHigh = area * 80 * qf;
+            const kitchenFloorRates = {
+                tile: { low: 30, high: 80 },
+                marble: { low: 80, high: 180 },
+                wood: { low: 45, high: 120 },
+                vinyl: { low: 35, high: 90 },
+            };
 
-            low += floorLow;
-            high += floorHigh;
+            const selectedRates =
+                kitchenFloorRates[floorMaterial] || kitchenFloorRates.tile;
 
-            breakdown.push({
-                label: "Νέο δάπεδο",
-                low: floorLow,
-                high: floorHigh,
-            });
+            const floorLow = area * selectedRates.low * qf;
+            const floorHigh = area * selectedRates.high * qf;
+
+            const materialLabels = {
+                tile: "Πλακάκι",
+                marble: "Μάρμαρο",
+                wood: "Ξύλο / Laminate",
+                vinyl: "Βινυλικό",
+            };
+
+            addItem(
+                `Νέο δάπεδο (${materialLabels[floorMaterial] || "Πλακάκι"})`,
+                floorLow,
+                floorHigh
+            );
         }
 
         if (hasInstallations) {
             const instLow = quality === "premium" ? 1500 : 1200;
             const instHigh = quality === "premium" ? 3500 : 2500;
 
-            low += instLow;
-            high += instHigh;
-
-            breakdown.push({
-                label: "Υδραυλικά & ηλεκτρολογικά",
-                low: instLow,
-                high: instHigh,
-            });
+            addItem("Υδραυλικά & ηλεκτρολογικά", instLow, instHigh);
         }
     }
 
@@ -127,56 +117,49 @@ export function calculateEstimateResult({
             const sanitaryLow = quality === "premium" ? 3500 : 2200;
             const sanitaryHigh = quality === "premium" ? 7000 : 4500;
 
-            low += sanitaryLow;
-            high += sanitaryHigh;
-
-            breakdown.push({
-                label: "Νέα είδη υγιεινής",
-                low: sanitaryLow,
-                high: sanitaryHigh,
-            });
+            addItem("Νέα είδη υγιεινής", sanitaryLow, sanitaryHigh);
         }
 
-        if (hasTiles) {
-            const tilesLow = area * (quality === "premium" ? 90 : 55);
-            const tilesHigh = area * (quality === "premium" ? 160 : 110);
+        if (hasFloor) {
+            const bathroomFloorRates = {
+                tile: { low: 55, high: 110 },
+                marble: { low: 100, high: 190 },
+                wood: { low: 60, high: 130 },
+                vinyl: { low: 50, high: 95 },
+            };
 
-            low += tilesLow;
-            high += tilesHigh;
+            const selectedRates =
+                bathroomFloorRates[floorMaterial] || bathroomFloorRates.tile;
 
-            breakdown.push({
-                label: "Νέα πλακάκια (τοίχος + δάπεδο)",
-                low: tilesLow,
-                high: tilesHigh,
-            });
+            const floorLow = area * selectedRates.low * qf;
+            const floorHigh = area * selectedRates.high * qf;
+
+            const materialLabels = {
+                tile: "Πλακάκι",
+                marble: "Μάρμαρο",
+                wood: "Ξύλο / Laminate",
+                vinyl: "Βινυλικό",
+            };
+
+            addItem(
+                `Νέο δάπεδο (${materialLabels[floorMaterial] || "Πλακάκι"})`,
+                floorLow,
+                floorHigh
+            );
         }
 
         if (hasBathroomPainting) {
             const bathPaintLow = area * 12 * qf;
             const bathPaintHigh = area * 25 * qf;
 
-            low += bathPaintLow;
-            high += bathPaintHigh;
-
-            breakdown.push({
-                label: "Βάψιμο",
-                low: bathPaintLow,
-                high: bathPaintHigh,
-            });
+            addItem("Βάψιμο", bathPaintLow, bathPaintHigh);
         }
 
         if (hasBathroomInstallations) {
             const bathInstLow = quality === "premium" ? 1800 : 1200;
             const bathInstHigh = quality === "premium" ? 4000 : 2800;
 
-            low += bathInstLow;
-            high += bathInstHigh;
-
-            breakdown.push({
-                label: "Υδραυλικά & ηλεκτρολογικά",
-                low: bathInstLow,
-                high: bathInstHigh,
-            });
+            addItem("Υδραυλικά & ηλεκτρολογικά", bathInstLow, bathInstHigh);
         }
     }
 
@@ -196,13 +179,19 @@ export function calculateEstimateResult({
         daysLow = 5;
         daysHigh = 12;
 
-        if (hasTiles && hasSanitary && hasBathroomInstallations) {
+        if (hasFloor && hasSanitary && hasBathroomInstallations) {
             daysHigh = 18;
         }
     }
 
     low *= rf;
     high *= rf;
+
+    const adjustedBreakdown = breakdown.map((item) => ({
+        label: item.label,
+        low: Math.round(item.low * rf * 1.24),
+        high: Math.round(item.high * rf * 1.24),
+    }));
 
     const lowWithVat = low * 1.24;
     const highWithVat = high * 1.24;
@@ -211,7 +200,7 @@ export function calculateEstimateResult({
     let comparisonMessage = "";
     let status = "";
 
-    if (quote > 0 && avgWithVat > 0) {
+    if (quote !== null && Number.isFinite(quote) && quote > 0 && avgWithVat > 0) {
         const percentage = Math.round(((quote - avgWithVat) / avgWithVat) * 100);
 
         if (quote < lowWithVat) {
@@ -234,8 +223,8 @@ export function calculateEstimateResult({
         low: Math.round(lowWithVat),
         high: Math.round(highWithVat),
         avg: Math.round(avgWithVat),
-        breakdown,
-        quote: quote > 0 ? quote : null,
+        breakdown: adjustedBreakdown,
+        quote: quote && quote > 0 ? quote : null,
         comparisonMessage,
         status,
         duration: `${daysLow} - ${daysHigh} ημέρες`,
