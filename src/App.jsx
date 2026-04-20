@@ -34,19 +34,27 @@ export default function App() {
     const [form, setForm] = useState({
         section: "kitchen",
         sqm: "",
-        quality: "standard",
         region: "athens",
 
         hasPrep: true,
 
         hasCabinets: true,
+        cabinetMaterial: "melamine",
+
         hasCountertop: true,
+        countertopMaterial: "laminate",
+
         hasPainting: false,
+
         hasFloor: false,
         floorMaterial: "tile",
+
         hasInstallations: false,
 
         hasSanitary: true,
+        sanitaryQuality: "standard",
+        sanitaryType: "shower",
+
         hasBathroomPainting: false,
         hasBathroomInstallations: false,
 
@@ -125,15 +133,6 @@ export default function App() {
                     placeholder="π.χ. 12"
                 />
 
-                <label className="field-label">Ποιότητα</label>
-                <select
-                    value={form.quality}
-                    onChange={(e) => updateField("quality", e.target.value)}
-                >
-                    <option value="standard">Standard</option>
-                    <option value="premium">Premium</option>
-                </select>
-
                 <label className="field-label">Περιοχή</label>
                 <select
                     value={form.region}
@@ -165,6 +164,22 @@ export default function App() {
                                 />
                             </label>
 
+                            {form.hasCabinets && (
+                                <>
+                                    <label className="field-label">Υλικό ντουλαπιών</label>
+                                    <select
+                                        value={form.cabinetMaterial}
+                                        onChange={(e) =>
+                                            updateField("cabinetMaterial", e.target.value)
+                                        }
+                                    >
+                                        <option value="melamine">Μελαμίνη</option>
+                                        <option value="mdf">MDF</option>
+                                        <option value="lacquer">Λάκα</option>
+                                    </select>
+                                </>
+                            )}
+
                             <label className="checkbox-row">
                                 <span>Νέος πάγκος</span>
                                 <input
@@ -175,6 +190,23 @@ export default function App() {
                                     }
                                 />
                             </label>
+
+                            {form.hasCountertop && (
+                                <>
+                                    <label className="field-label">Υλικό πάγκου</label>
+                                    <select
+                                        value={form.countertopMaterial}
+                                        onChange={(e) =>
+                                            updateField("countertopMaterial", e.target.value)
+                                        }
+                                    >
+                                        <option value="laminate">Laminate</option>
+                                        <option value="quartz">Quartz</option>
+                                        <option value="granite">Granite</option>
+                                        <option value="corian">Corian</option>
+                                    </select>
+                                </>
+                            )}
 
                             <label className="checkbox-row">
                                 <span>Βάψιμο</span>
@@ -235,6 +267,35 @@ export default function App() {
                                 />
                             </label>
 
+                            {form.hasSanitary && (
+                                <>
+                                    <label className="field-label">
+                                        Κατηγορία ειδών υγιεινής
+                                    </label>
+                                    <select
+                                        value={form.sanitaryQuality}
+                                        onChange={(e) =>
+                                            updateField("sanitaryQuality", e.target.value)
+                                        }
+                                    >
+                                        <option value="basic">Basic</option>
+                                        <option value="standard">Standard</option>
+                                        <option value="premium">Premium</option>
+                                    </select>
+
+                                    <label className="field-label">Τύπος</label>
+                                    <select
+                                        value={form.sanitaryType}
+                                        onChange={(e) =>
+                                            updateField("sanitaryType", e.target.value)
+                                        }
+                                    >
+                                        <option value="shower">Ντουζιέρα</option>
+                                        <option value="bathtub">Μπανιέρα</option>
+                                    </select>
+                                </>
+                            )}
+
                             <label className="checkbox-row">
                                 <span>Νέο δάπεδο</span>
                                 <input
@@ -255,7 +316,6 @@ export default function App() {
                                     >
                                         <option value="tile">Πλακάκι</option>
                                         <option value="marble">Μάρμαρο</option>
-                                        <option value="wood">Ξύλο / Laminate</option>
                                         <option value="vinyl">Βινυλικό</option>
                                     </select>
                                 </>

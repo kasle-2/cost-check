@@ -3,18 +3,27 @@ import { costData } from "./costData";
 export function calculateEstimateResult({
                                             section,
                                             sqm,
-                                            quality,
                                             region,
                                             hasPrep,
+
                                             hasCabinets,
+                                            cabinetMaterial,
+
                                             hasCountertop,
+                                            countertopMaterial,
+
                                             hasPainting,
                                             hasFloor,
                                             floorMaterial,
                                             hasInstallations,
+
                                             hasSanitary,
+                                            sanitaryQuality,
+                                            sanitaryType,
+
                                             hasBathroomPainting,
                                             hasBathroomInstallations,
+
                                             userQuote,
                                         }) {
     const area = Number(sqm);
@@ -29,8 +38,7 @@ export function calculateEstimateResult({
         };
     }
 
-    const qf = costData.qualityFactor[quality] || 1;
-    const rf = costData.regionFactor[region] || 1;
+    const rf = costData.regionFactor?.[region] || 1;
 
     let low = 0;
     let high = 0;
@@ -48,65 +56,85 @@ export function calculateEstimateResult({
     }
 
     if (hasPrep) {
-        const prepLow = area * 20 * qf;
-        const prepHigh = area * 50 * qf;
+        const prepLow = area * 20;
+        const prepHigh = area * 50;
 
         addItem("Αποξήλωση & προετοιμασία", prepLow, prepHigh);
     }
 
     if (section === "kitchen") {
         if (hasCabinets) {
-            const cabinetsLow = area * (quality === "premium" ? 500 : 300);
-            const cabinetsHigh = area * (quality === "premium" ? 900 : 600);
+            const cabinetRates = {
+                melamine: { low: 300, high: 600, label: "Μελαμίνη" },
+                mdf: { low: 450, high: 800, label: "MDF" },
+                lacquer: { low: 600, high: 1000, label: "Λάκα" },
+            };
 
-            addItem("Νέα ντουλάπια", cabinetsLow, cabinetsHigh);
+            const selectedCabinet =
+                cabinetRates[cabinetMaterial] || cabinetRates.melamine;
+
+            const cabinetsLow = area * selectedCabinet.low;
+            const cabinetsHigh = area * selectedCabinet.high;
+
+            addItem(
+                `Νέα ντουλάπια (${selectedCabinet.label})`,
+                cabinetsLow,
+                cabinetsHigh
+            );
         }
 
         if (hasCountertop) {
-            const countertopLow = area * (quality === "premium" ? 250 : 150);
-            const countertopHigh = area * (quality === "premium" ? 500 : 300);
+            const countertopRates = {
+                laminate: { low: 150, high: 300, label: "Laminate" },
+                quartz: { low: 300, high: 550, label: "Quartz" },
+                granite: { low: 350, high: 650, label: "Granite" },
+                corian: { low: 400, high: 700, label: "Corian" },
+            };
 
-            addItem("Νέος πάγκος", countertopLow, countertopHigh);
+            const selectedCountertop =
+                countertopRates[countertopMaterial] || countertopRates.laminate;
+
+            const countertopLow = area * selectedCountertop.low;
+            const countertopHigh = area * selectedCountertop.high;
+
+            addItem(
+                `Νέος πάγκος (${selectedCountertop.label})`,
+                countertopLow,
+                countertopHigh
+            );
         }
 
         if (hasPainting) {
-            const paintLow = area * 10 * qf;
-            const paintHigh = area * 20 * qf;
+            const paintLow = area * 10;
+            const paintHigh = area * 20;
 
             addItem("Βάψιμο", paintLow, paintHigh);
         }
 
         if (hasFloor) {
             const kitchenFloorRates = {
-                tile: { low: 30, high: 80 },
-                marble: { low: 80, high: 180 },
-                wood: { low: 45, high: 120 },
-                vinyl: { low: 35, high: 90 },
+                tile: { low: 30, high: 80, label: "Πλακάκι" },
+                marble: { low: 80, high: 180, label: "Μάρμαρο" },
+                wood: { low: 45, high: 120, label: "Ξύλο / Laminate" },
+                vinyl: { low: 35, high: 90, label: "Βινυλικό" },
             };
 
-            const selectedRates =
+            const selectedFloor =
                 kitchenFloorRates[floorMaterial] || kitchenFloorRates.tile;
 
-            const floorLow = area * selectedRates.low * qf;
-            const floorHigh = area * selectedRates.high * qf;
-
-            const materialLabels = {
-                tile: "Πλακάκι",
-                marble: "Μάρμαρο",
-                wood: "Ξύλο / Laminate",
-                vinyl: "Βινυλικό",
-            };
+            const floorLow = area * selectedFloor.low;
+            const floorHigh = area * selectedFloor.high;
 
             addItem(
-                `Νέο δάπεδο (${materialLabels[floorMaterial] || "Πλακάκι"})`,
+                `Νέο δάπεδο (${selectedFloor.label})`,
                 floorLow,
                 floorHigh
             );
         }
 
         if (hasInstallations) {
-            const instLow = quality === "premium" ? 1500 : 1200;
-            const instHigh = quality === "premium" ? 3500 : 2500;
+            const instLow = 1200;
+            const instHigh = 2800;
 
             addItem("Υδραυλικά & ηλεκτρολογικά", instLow, instHigh);
         }
@@ -114,50 +142,65 @@ export function calculateEstimateResult({
 
     if (section === "bathroom") {
         if (hasSanitary) {
-            const sanitaryLow = quality === "premium" ? 3500 : 2200;
-            const sanitaryHigh = quality === "premium" ? 7000 : 4500;
+            const sanitaryRates = {
+                basic: { low: 1500, high: 2500, label: "Basic" },
+                standard: { low: 2200, high: 4500, label: "Standard" },
+                premium: { low: 3500, high: 7000, label: "Premium" },
+            };
 
-            addItem("Νέα είδη υγιεινής", sanitaryLow, sanitaryHigh);
+            const sanitaryTypeExtra = {
+                shower: { low: 0, high: 0, label: "Ντουζιέρα" },
+                bathtub: { low: 800, high: 1500, label: "Μπανιέρα" },
+            };
+
+            const selectedSanitary =
+                sanitaryRates[sanitaryQuality] || sanitaryRates.standard;
+
+            const selectedSanitaryType =
+                sanitaryTypeExtra[sanitaryType] || sanitaryTypeExtra.shower;
+
+            const sanitaryLow =
+                selectedSanitary.low + selectedSanitaryType.low;
+            const sanitaryHigh =
+                selectedSanitary.high + selectedSanitaryType.high;
+
+            addItem(
+                `Νέα είδη υγιεινής (${selectedSanitary.label}, ${selectedSanitaryType.label})`,
+                sanitaryLow,
+                sanitaryHigh
+            );
         }
 
         if (hasFloor) {
             const bathroomFloorRates = {
-                tile: { low: 55, high: 110 },
-                marble: { low: 100, high: 190 },
-                wood: { low: 60, high: 130 },
-                vinyl: { low: 50, high: 95 },
+                tile: { low: 55, high: 110, label: "Πλακάκι" },
+                marble: { low: 100, high: 190, label: "Μάρμαρο" },
+                vinyl: { low: 50, high: 95, label: "Βινυλικό" },
             };
 
-            const selectedRates =
+            const selectedFloor =
                 bathroomFloorRates[floorMaterial] || bathroomFloorRates.tile;
 
-            const floorLow = area * selectedRates.low * qf;
-            const floorHigh = area * selectedRates.high * qf;
-
-            const materialLabels = {
-                tile: "Πλακάκι",
-                marble: "Μάρμαρο",
-                wood: "Ξύλο / Laminate",
-                vinyl: "Βινυλικό",
-            };
+            const floorLow = area * selectedFloor.low;
+            const floorHigh = area * selectedFloor.high;
 
             addItem(
-                `Νέο δάπεδο (${materialLabels[floorMaterial] || "Πλακάκι"})`,
+                `Νέο δάπεδο (${selectedFloor.label})`,
                 floorLow,
                 floorHigh
             );
         }
 
         if (hasBathroomPainting) {
-            const bathPaintLow = area * 12 * qf;
-            const bathPaintHigh = area * 25 * qf;
+            const bathPaintLow = area * 12;
+            const bathPaintHigh = area * 25;
 
             addItem("Βάψιμο", bathPaintLow, bathPaintHigh);
         }
 
         if (hasBathroomInstallations) {
-            const bathInstLow = quality === "premium" ? 1800 : 1200;
-            const bathInstHigh = quality === "premium" ? 4000 : 2800;
+            const bathInstLow = 1200;
+            const bathInstHigh = 3000;
 
             addItem("Υδραυλικά & ηλεκτρολογικά", bathInstLow, bathInstHigh);
         }
