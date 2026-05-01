@@ -494,6 +494,37 @@ ${result.bestQuoteMessage || ""}
                             </li>
                         ))}
                     </ul>
+                    <div
+                        style={{
+                            marginTop: "20px",
+                            padding: "16px",
+                            borderRadius: "12px",
+                            background: "#eff6ff",
+                            border: "1px solid #bfdbfe",
+                        }}
+                    >
+                        <h3 style={{ marginTop: 0 }}>Θες να ελέγξουμε την προσφορά σου;</h3>
+
+                        <p style={{ marginBottom: "12px" }}>
+                            Στείλε μας την προσφορά που πήρες και θα σου πούμε αν φαίνεται λογική,
+                            ακριβή ή αν λείπουν βασικά στοιχεία.
+                        </p>
+
+                        <a
+                            href="panosl@gmail.com?subject=Έλεγχος προσφοράς ανακαίνισης"
+                            style={{
+                                display: "inline-block",
+                                padding: "12px 16px",
+                                borderRadius: "10px",
+                                background: "#2563eb",
+                                color: "white",
+                                fontWeight: "bold",
+                                textDecoration: "none",
+                            }}
+                        >
+                            📩 Στείλε προσφορά
+                        </a>
+                    </div>
 
                     <button onClick={copyResults} style={{ marginTop: "15px" }}>
                         📋 Αντιγραφή αποτελέσματος
