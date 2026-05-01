@@ -511,7 +511,7 @@ ${result.bestQuoteMessage || ""}
                         </p>
 
                         <a
-                            href="panosl@gmail.com?subject=Έλεγχος προσφοράς ανακαίνισης"
+                            href="mailto:panos@gmail.com?subject=Έλεγχος προσφοράς ανακαίνισης"
                             style={{
                                 display: "inline-block",
                                 padding: "12px 16px",
