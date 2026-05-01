@@ -35,20 +35,29 @@ export default function App() {
         section: "kitchen",
         sqm: "",
         region: "athens",
-        hasPrep: true,
-        hasCabinets: true,
+
+        hasPrep: false,
+
+        hasCabinets: false,
         cabinetMaterial: "melamine",
-        hasCountertop: true,
+
+        hasCountertop: false,
         countertopMaterial: "laminate",
+
         hasPainting: false,
+
         hasFloor: false,
         floorMaterial: "tile",
+
         hasInstallations: false,
-        hasSanitary: true,
+
+        hasSanitary: false,
         sanitaryQuality: "standard",
         sanitaryType: "shower",
+
         hasBathroomPainting: false,
         hasBathroomInstallations: false,
+
         quote1: "",
         quote2: "",
         quote3: "",
