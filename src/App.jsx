@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import "./App.css";
 import { calculateEstimateResult } from "./estimate";
 
@@ -64,6 +64,7 @@ export default function App() {
     });
 
     const [result, setResult] = useState(null);
+    const resultRef = useRef(null);
 
     function updateField(name, value) {
         setForm((prev) => ({
@@ -81,6 +82,13 @@ export default function App() {
         }
 
         setResult(estimate);
+
+        setTimeout(() => {
+            resultRef.current?.scrollIntoView({
+                behavior: "smooth",
+                block: "start",
+            });
+        }, 100);
     }
 
     function copyResults() {
@@ -431,7 +439,7 @@ ${result.bestQuoteMessage || ""}
             </div>
 
             {result && (
-                <div className="result-card">
+                <div ref={resultRef} className="result-card">
                     {result.warning && (
                         <div
                             style={{
