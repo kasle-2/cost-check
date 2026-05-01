@@ -393,7 +393,11 @@ ${result.bestQuoteMessage || ""}
             </div>
 
             {result && (
-                <div ref={resultRef} className="result-card">
+                <div
+                    key={result.avg}
+                    ref={resultRef}
+                    className="result-card"
+                >
                     {result.warning && (
                         <div
                             style={{
