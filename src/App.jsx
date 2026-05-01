@@ -35,29 +35,20 @@ export default function App() {
         section: "kitchen",
         sqm: "",
         region: "athens",
-
         hasPrep: true,
-
         hasCabinets: true,
         cabinetMaterial: "melamine",
-
         hasCountertop: true,
         countertopMaterial: "laminate",
-
         hasPainting: false,
-
         hasFloor: false,
         floorMaterial: "tile",
-
         hasInstallations: false,
-
         hasSanitary: true,
         sanitaryQuality: "standard",
         sanitaryType: "shower",
-
         hasBathroomPainting: false,
         hasBathroomInstallations: false,
-
         quote1: "",
         quote2: "",
         quote3: "",
@@ -67,10 +58,7 @@ export default function App() {
     const resultRef = useRef(null);
 
     function updateField(name, value) {
-        setForm((prev) => ({
-            ...prev,
-            [name]: value,
-        }));
+        setForm((prev) => ({ ...prev, [name]: value }));
     }
 
     function calculateEstimate() {
@@ -210,9 +198,7 @@ ${result.bestQuoteMessage || ""}
                                 <input
                                     type="checkbox"
                                     checked={form.hasCabinets}
-                                    onChange={(e) =>
-                                        updateField("hasCabinets", e.target.checked)
-                                    }
+                                    onChange={(e) => updateField("hasCabinets", e.target.checked)}
                                 />
                             </label>
 
@@ -221,9 +207,7 @@ ${result.bestQuoteMessage || ""}
                                     <label className="field-label">Υλικό ντουλαπιών</label>
                                     <select
                                         value={form.cabinetMaterial}
-                                        onChange={(e) =>
-                                            updateField("cabinetMaterial", e.target.value)
-                                        }
+                                        onChange={(e) => updateField("cabinetMaterial", e.target.value)}
                                     >
                                         <option value="melamine">Μελαμίνη</option>
                                         <option value="mdf">MDF</option>
@@ -237,9 +221,7 @@ ${result.bestQuoteMessage || ""}
                                 <input
                                     type="checkbox"
                                     checked={form.hasCountertop}
-                                    onChange={(e) =>
-                                        updateField("hasCountertop", e.target.checked)
-                                    }
+                                    onChange={(e) => updateField("hasCountertop", e.target.checked)}
                                 />
                             </label>
 
@@ -248,9 +230,7 @@ ${result.bestQuoteMessage || ""}
                                     <label className="field-label">Υλικό πάγκου</label>
                                     <select
                                         value={form.countertopMaterial}
-                                        onChange={(e) =>
-                                            updateField("countertopMaterial", e.target.value)
-                                        }
+                                        onChange={(e) => updateField("countertopMaterial", e.target.value)}
                                     >
                                         <option value="laminate">Laminate</option>
                                         <option value="quartz">Quartz</option>
@@ -265,9 +245,7 @@ ${result.bestQuoteMessage || ""}
                                 <input
                                     type="checkbox"
                                     checked={form.hasPainting}
-                                    onChange={(e) =>
-                                        updateField("hasPainting", e.target.checked)
-                                    }
+                                    onChange={(e) => updateField("hasPainting", e.target.checked)}
                                 />
                             </label>
 
@@ -285,9 +263,7 @@ ${result.bestQuoteMessage || ""}
                                     <label className="field-label">Υλικό δαπέδου</label>
                                     <select
                                         value={form.floorMaterial}
-                                        onChange={(e) =>
-                                            updateField("floorMaterial", e.target.value)
-                                        }
+                                        onChange={(e) => updateField("floorMaterial", e.target.value)}
                                     >
                                         <option value="tile">Πλακάκι</option>
                                         <option value="marble">Μάρμαρο</option>
@@ -302,9 +278,7 @@ ${result.bestQuoteMessage || ""}
                                 <input
                                     type="checkbox"
                                     checked={form.hasInstallations}
-                                    onChange={(e) =>
-                                        updateField("hasInstallations", e.target.checked)
-                                    }
+                                    onChange={(e) => updateField("hasInstallations", e.target.checked)}
                                 />
                             </label>
                         </>
@@ -317,22 +291,16 @@ ${result.bestQuoteMessage || ""}
                                 <input
                                     type="checkbox"
                                     checked={form.hasSanitary}
-                                    onChange={(e) =>
-                                        updateField("hasSanitary", e.target.checked)
-                                    }
+                                    onChange={(e) => updateField("hasSanitary", e.target.checked)}
                                 />
                             </label>
 
                             {form.hasSanitary && (
                                 <>
-                                    <label className="field-label">
-                                        Ποιότητα ειδών υγιεινής
-                                    </label>
+                                    <label className="field-label">Ποιότητα ειδών υγιεινής</label>
                                     <select
                                         value={form.sanitaryQuality}
-                                        onChange={(e) =>
-                                            updateField("sanitaryQuality", e.target.value)
-                                        }
+                                        onChange={(e) => updateField("sanitaryQuality", e.target.value)}
                                     >
                                         <option value="standard">Standard</option>
                                         <option value="premium">Premium</option>
@@ -341,9 +309,7 @@ ${result.bestQuoteMessage || ""}
                                     <label className="field-label">Τύπος</label>
                                     <select
                                         value={form.sanitaryType}
-                                        onChange={(e) =>
-                                            updateField("sanitaryType", e.target.value)
-                                        }
+                                        onChange={(e) => updateField("sanitaryType", e.target.value)}
                                     >
                                         <option value="shower">Ντουζιέρα</option>
                                         <option value="bathtub">Μπανιέρα</option>
@@ -365,9 +331,7 @@ ${result.bestQuoteMessage || ""}
                                     <label className="field-label">Υλικό δαπέδου</label>
                                     <select
                                         value={form.floorMaterial}
-                                        onChange={(e) =>
-                                            updateField("floorMaterial", e.target.value)
-                                        }
+                                        onChange={(e) => updateField("floorMaterial", e.target.value)}
                                     >
                                         <option value="tile">Πλακάκι</option>
                                         <option value="marble">Μάρμαρο</option>
@@ -381,12 +345,7 @@ ${result.bestQuoteMessage || ""}
                                 <input
                                     type="checkbox"
                                     checked={form.hasBathroomPainting}
-                                    onChange={(e) =>
-                                        updateField(
-                                            "hasBathroomPainting",
-                                            e.target.checked
-                                        )
-                                    }
+                                    onChange={(e) => updateField("hasBathroomPainting", e.target.checked)}
                                 />
                             </label>
 
@@ -395,12 +354,7 @@ ${result.bestQuoteMessage || ""}
                                 <input
                                     type="checkbox"
                                     checked={form.hasBathroomInstallations}
-                                    onChange={(e) =>
-                                        updateField(
-                                            "hasBathroomInstallations",
-                                            e.target.checked
-                                        )
-                                    }
+                                    onChange={(e) => updateField("hasBathroomInstallations", e.target.checked)}
                                 />
                             </label>
                         </>
@@ -458,8 +412,10 @@ ${result.bestQuoteMessage || ""}
                     <h2>💰 Εκτιμώμενο κόστος</h2>
 
                     <p className="price">
-                        {result.low.toLocaleString("el-GR")} € —{" "}
-                        {result.high.toLocaleString("el-GR")} €
+                        <strong>
+                            {result.low.toLocaleString("el-GR")} € —{" "}
+                            {result.high.toLocaleString("el-GR")} €
+                        </strong>
                     </p>
 
                     <p>Μέσο κόστος: {result.avg.toLocaleString("el-GR")} €</p>
@@ -473,22 +429,18 @@ ${result.bestQuoteMessage || ""}
                         {form.hasCountertop && (
                             <li>Ο πάγκος είναι βασικός παράγοντας κόστους.</li>
                         )}
-                        {form.hasFloor && (
-                            <li>Το δάπεδο αυξάνει το συνολικό budget.</li>
-                        )}
+                        {form.hasFloor && <li>Το δάπεδο αυξάνει το συνολικό budget.</li>}
                         {form.hasInstallations && form.section === "kitchen" && (
                             <li>Τα υδραυλικά και ηλεκτρολογικά ανεβάζουν το έργο.</li>
                         )}
                         {form.hasSanitary && form.section === "bathroom" && (
                             <li>Τα είδη υγιεινής επηρεάζουν έντονα το τελικό εύρος.</li>
                         )}
-                        {form.hasBathroomInstallations &&
-                            form.section === "bathroom" && (
-                                <li>
-                                    Οι παρεμβάσεις σε υδραυλικά και ηλεκτρολογικά αυξάνουν
-                                    το κόστος.
-                                </li>
-                            )}
+                        {form.hasBathroomInstallations && form.section === "bathroom" && (
+                            <li>
+                                Οι παρεμβάσεις σε υδραυλικά και ηλεκτρολογικά αυξάνουν το κόστος.
+                            </li>
+                        )}
                         <li>Η περιοχή του έργου επηρεάζει τις τιμές αγοράς και εργασίας.</li>
                     </ul>
 
@@ -534,8 +486,7 @@ ${result.bestQuoteMessage || ""}
                     <ul>
                         {result.breakdown.map((item, i) => (
                             <li key={i}>
-                                {item.label}: {Math.round(item.low)}€ -{" "}
-                                {Math.round(item.high)}€
+                                {item.label}: {Math.round(item.low)}€ - {Math.round(item.high)}€
                             </li>
                         ))}
                     </ul>
